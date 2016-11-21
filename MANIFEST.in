@@ -1,0 +1,6 @@
+include LICENSE
+include MANIFEST.in
+include README.rst
+recursive-include authlib/static *
+recursive-include authlib/locale *
+recursive-include authlib/templates *

@@ -1,0 +1,11 @@
+*.py?
+*~
+*.sw?
+.DS_Store
+._*
+*.egg-info
+/MANIFEST
+_build
+build
+dist
+venv
