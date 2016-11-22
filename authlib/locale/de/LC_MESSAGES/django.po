@@ -1,0 +1,90 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-22 15:04+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: base.py:44 views.py:85
+msgid "email"
+msgstr "Email"
+
+#: base.py:48
+msgid "is active"
+msgstr "ist aktiv"
+
+#: base.py:49
+msgid "is staff"
+msgstr "ist Mitarbeiter"
+
+#: base.py:50
+msgid "date joined"
+msgstr "Konto seit"
+
+#: base.py:56
+msgid "user"
+msgstr "Nutzer"
+
+#: base.py:57
+msgid "users"
+msgstr "Nutzer"
+
+#: email.py:136
+msgid "The link is expired. Please request another registration link."
+msgstr "Der Link ist abgelaufen. Bitte fordere einen anderen an."
+
+#: email.py:141
+msgid "Unable to verify the signature. Please request a new registration link."
+msgstr "Konnte Signatur nicht verifizieren. Bitte fordere einen neuen Link an."
+
+#: email.py:148 email.py:158
+msgid ""
+"Something went wrong while decoding the registration request. Please try "
+"again."
+msgstr "Etwas ging schief. Bitte versuche es nochmals."
+
+#: email.py:164
+msgid "The link has already been used."
+msgstr "Der Link wurde schon verwendet."
+
+#: views.py:68 views.py:149
+msgid "Welcome! Please fill in your details."
+msgstr "Schön bist du bei uns. Bitte ergänze deine Angaben."
+
+#: views.py:77
+#, python-format
+msgid "No user with email address %s found."
+msgstr "Kein Nutzer mit Emailadresse %s gefunden."
+
+#: views.py:98
+#, python-format
+msgid ""
+"The email you entered (%(input)s) does not match the email of the account "
+"you're logged in as currently (%(current)s)."
+msgstr ""
+"Die Email die du angegeben hast (%(input)s) stimmt nicht mit der Email des "
+"Profils überein, mit dem du angemeldet bist (%(current)s)."
+
+#: views.py:104
+msgid "This email address belongs to an inactive account."
+msgstr "Diese Emailadresse gehört zu einem inaktiven Konto."
+
+#: views.py:125
+msgid "Please check your mailbox."
+msgstr "Bitte prüfe deine Mailbox."
+
+#: views.py:165
+msgid "You have been signed out."
+msgstr "Du hast dich abgemeldet."
