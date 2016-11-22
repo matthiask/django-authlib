@@ -18,10 +18,7 @@ class FacebookOAuth2Client(OAuthClient):
         self._session = OAuth2Session(
             self.client_id,
             scope=self.scope,
-            redirect_uri=request.build_absolute_uri(reverse(
-                'accounts_oauth2',
-                kwargs={'provider': 'facebook'},
-            )),
+            redirect_uri=request.build_absolute_uri('.'),
         )
 
     def get_authentication_url(self):

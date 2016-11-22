@@ -5,6 +5,8 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
+- Fixed the redirect URL generation of the Facebook and Google client.
+
 
 `0.2`_ (2016-11-22)
 ~~~~~~~~~~~~~~~~~~~
