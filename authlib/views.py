@@ -12,13 +12,18 @@ from django.views.decorators.debug import sensitive_post_parameters
 from authlib.email import send_registration_mail, decode
 
 
+REDIRECT_COOKIE_NAME = 'authlib-next'
+
+
 def retrieve_next(request):
-    next = request.COOKIES.get('next')
+    next = request.COOKIES.get(REDIRECT_COOKIE_NAME)
     return next if is_safe_url(url=next, host=request.get_host()) else None
 
 
 def post_login_response(request, new_user):
-    return redirect(retrieve_next(request) or settings.LOGIN_REDIRECT_URL)
+    response = redirect(retrieve_next(request) or settings.LOGIN_REDIRECT_URL)
+    response.delete_cookie(REDIRECT_COOKIE_NAME)
+    return response
 
 
 @never_cache
@@ -40,7 +45,10 @@ def login(request, template_name='registration/login.html',
         'form': form,
     })
     if request.GET.get('next'):
-        response.set_cookie('next', request.GET['next'], max_age=600)
+        response.set_cookie(
+            REDIRECT_COOKIE_NAME,
+            request.GET['next'],
+            max_age=600)
     return response
 
 

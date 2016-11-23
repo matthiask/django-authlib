@@ -6,6 +6,8 @@ Change log
 ~~~~~~~~~~~~~~~
 
 - Fixed the redirect URL generation of the Facebook and Google client.
+- Changed the name of the post login redirect cookie from ``next`` to
+  ``authlib-next`` to hopefully prevent clashes.
 
 
 `0.2`_ (2016-11-22)
