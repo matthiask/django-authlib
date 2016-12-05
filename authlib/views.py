@@ -86,6 +86,12 @@ def oauth2(request, client_class, post_login_response=post_login_response):
 
         return post_login_response(request, new_user)
 
+    else:
+        messages.error(
+            request,
+            _('Did not get an email address. Please try again.')
+        )
+
     return redirect('login')
 
 

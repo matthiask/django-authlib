@@ -43,6 +43,6 @@ class GoogleOAuth2Client(OAuthClient):
         ).json()
 
         return {
-            'email': data['email'],
-            'full_name': data['name'],
+            'email': data.get('email'),
+            'full_name': data.get('name'),
         }
