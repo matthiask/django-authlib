@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.urls import reverse
 
 from requests_oauthlib import OAuth2Session
 
