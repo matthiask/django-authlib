@@ -40,8 +40,7 @@ class TwitterOAuthClient(OAuthClient):
             client_secret=self.client_secret,
         )
         oauth_response = oauth.parse_authorization_response(
-            self._request.get_full_path(),
-        )
+            self._request.build_absolute_uri(self._request.get_full_path()))
         verifier = oauth_response.get('oauth_verifier')
 
         resource_owner = cache.get(

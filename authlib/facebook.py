@@ -33,7 +33,8 @@ class FacebookOAuth2Client(OAuthClient):
         self._session.fetch_token(
             self.token_url,
             client_secret=self.client_secret,
-            authorization_response=self._request.get_full_path(),
+            authorization_response=self._request.build_absolute_uri(
+                self._request.get_full_path()),
         )
         data = self._session.get(
             'https://graph.facebook.com/v2.8/me',

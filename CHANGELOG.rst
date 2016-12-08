@@ -11,6 +11,8 @@ Change log
 - Authentication providers may also return ``None`` as email address;
   handle this case gracefully by showing an error message instead of
   crashing.
+- Pass full URLs, not only paths to the OAuth2 libraries because
+  otherwise, secure redirect URLs aren't recognized as such.
 
 
 `0.2`_ (2016-11-22)
