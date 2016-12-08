@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
+`0.3`_ (2016-12-08)
+~~~~~~~~~~~~~~~~~~~
+
 - Fixed the redirect URL generation of the Facebook and Google client.
 - Changed the name of the post login redirect cookie from ``next`` to
   ``authlib-next`` to hopefully prevent clashes.
@@ -33,4 +36,5 @@ Change log
 
 .. _0.1: https://github.com/matthiask/django-authlib/commit/0e4a81c11
 .. _0.2: https://github.com/matthiask/django-authlib/compare/0.1...0.2
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.2...master
+.. _0.3: https://github.com/matthiask/django-authlib/compare/0.2...0.3
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.3...master
