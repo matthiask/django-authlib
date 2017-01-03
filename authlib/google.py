@@ -10,7 +10,6 @@ class GoogleOAuth2Client(OAuthClient):
     token_url = 'https://www.googleapis.com/oauth2/v4/token'
     scope = [
         'https://www.googleapis.com/auth/userinfo.email',
-        'https://www.googleapis.com/auth/userinfo.profile',
     ]
     client_id = settings.GOOGLE_CLIENT_ID
     client_secret = settings.GOOGLE_CLIENT_SECRET
@@ -26,8 +25,6 @@ class GoogleOAuth2Client(OAuthClient):
     def get_authentication_url(self):
         authorization_url, self._state = self._session.authorization_url(
             self.authorization_base_url,
-            access_type='offline',  # Only right now.
-            # approval_prompt='force',  # Maybe not, later.
         )
 
         return authorization_url

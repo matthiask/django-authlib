@@ -5,6 +5,11 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
+- Added some documentation to the README.
+- Google client: Removed the deprecated profile scope, and switched to
+  online access only (we do not need offline access).
+
+
 `0.3`_ (2016-12-08)
 ~~~~~~~~~~~~~~~~~~~
 
