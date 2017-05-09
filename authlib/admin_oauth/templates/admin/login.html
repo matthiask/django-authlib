@@ -1,0 +1,8 @@
+{% extends "admin/login.html" %}
+
+{% load i18n %}
+
+{% block content %}
+{{ block.super }}
+<a href="{% url 'admin_oauth' %}?next={{ request.GET.next }}">{% trans "Log in using SSO" %}</a>
+{% endblock content %}
