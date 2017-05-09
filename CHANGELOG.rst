@@ -8,6 +8,8 @@ Change log
 - Added some documentation to the README.
 - Google client: Removed the deprecated profile scope, and switched to
   online access only (we do not need offline access).
+- Added the ``authlib.admin_oauth`` app for a minimal Google OAuth2
+  authentication solution for Django's administration interface.
 
 
 `0.3`_ (2016-12-08)
