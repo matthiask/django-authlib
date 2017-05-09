@@ -98,3 +98,39 @@ writing ``django-authlib``'s Python code is less than 500 lines)::
             name='logout',
         ),
     ]
+
+
+Admin OAuth2
+============
+
+The ``authlib.admin_oauth`` app allows using Google OAuth2 to allow all
+users with the same email domain to authenticate for Django's
+administration interface. You have to use authlib's authentication
+backend (``EmailBackend``) for this.
+
+Installation is as follows:
+
+- Add ``authlib.admin_oauth`` to your ``INSTALLED_APPS`` before
+  ``django.contrib.admin``, so that our login template is picked up.
+- Add ``GOOGLE_CLIENT_ID`` and ``GOOGLE_CLIENT_SECRET`` to your settings
+  as described above.
+- Add a ``ADMIN_OAUTH_DOMAINS`` setting (the first item is the domain,
+  the second the email address of an existing staff account)::
+
+    ADMIN_OAUTH_DOMAINS = [
+        ('@example.com', 'admin@example.com'),
+    ]
+
+- Add an entry to your URLconf::
+
+    from authlib.admin_oauth.views import admin_oauth
+
+    # ...
+
+    urlpatterns = [
+        url(r'^admin/__oauth__/$', admin_oauth, name='admin_oauth'),
+        url(r'^admin/', admin.site.urls),
+    ]
+
+- Add ``https://yourdomain.com/admin/__oauth__/`` as a valid redirect
+  URI in your Google developers console.
