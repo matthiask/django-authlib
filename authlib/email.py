@@ -71,7 +71,8 @@ def get_last_login_timestamp(user):
     return int(user.last_login.strftime('%s')) if user.last_login else 0
 
 
-def get_confirmation_url(email, request, user=None):
+def get_confirmation_url(email, request, user=None,
+                         name='email_registration_confirm'):
     """
     Returns the confirmation URL
     """
@@ -82,7 +83,7 @@ def get_confirmation_url(email, request, user=None):
 
     return request.build_absolute_uri(
         reverse(
-            'email_registration_confirm',
+            name,
             kwargs={
                 'code': get_signer().sign(u':'.join(code)),
             }))
