@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ~~~~~~~~~~~~~~~
 
+`0.4`_ (2017-05-11)
+~~~~~~~~~~~~~~~~~~~
+
 - Added some documentation to the README.
 - Google client: Removed the deprecated profile scope, and switched to
   online access only (we do not need offline access).
@@ -13,6 +16,8 @@ Change log
 - Added the ``authlib.little_auth`` app containing a minimal user model
   with email as username for a quick and dirty ``auth.User``
   replacement.
+- Allow overriding the view name used in
+  ``authlib.email.get_confirmation_url``.
 
 
 `0.3`_ (2016-12-08)
@@ -47,4 +52,5 @@ Change log
 .. _0.1: https://github.com/matthiask/django-authlib/commit/0e4a81c11
 .. _0.2: https://github.com/matthiask/django-authlib/compare/0.1...0.2
 .. _0.3: https://github.com/matthiask/django-authlib/compare/0.2...0.3
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.3...master
+.. _0.4: https://github.com/matthiask/django-authlib/compare/0.3...0.4
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.4...master
