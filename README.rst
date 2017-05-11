@@ -123,14 +123,24 @@ Installation is as follows:
 
 - Add an entry to your URLconf::
 
-    from authlib.admin_oauth.views import admin_oauth
-
-    # ...
-
     urlpatterns = [
-        url(r'^admin/__oauth__/$', admin_oauth, name='admin_oauth'),
-        url(r'^admin/', admin.site.urls),
+        url(r'', include('authlib.admin_oauth.urls')),
+        # ...
     ]
 
 - Add ``https://yourdomain.com/admin/__oauth__/`` as a valid redirect
   URI in your Google developers console.
+
+
+Little Auth
+===========
+
+The ``authlib.little_auth`` app contains a basic user model with email
+as username that can be used if you do not want to write your own user
+model but still profit from authlib's authentication support.
+
+Usage is as follows:
+
+- Add ``authlib.little_auth`` to your ``INSTALLED_APPS``
+- Set ``AUTH_USER_MODEL = 'little_auth.User'``
+- Optionally also follow any of the steps above.

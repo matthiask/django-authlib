@@ -18,7 +18,9 @@ setup(
     url='http://github.com/matthiask/django-authlib/',
     license='MIT License',
     platforms=['OS Independent'],
-    packages=find_packages(),
+    packages=find_packages(
+        exclude=['tests', 'testapp'],
+    ),
     include_package_data=True,
     install_requires=[
         'requests_oauthlib',

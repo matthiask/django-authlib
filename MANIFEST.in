@@ -1,9 +1,4 @@
 include LICENSE
 include MANIFEST.in
 include README.rst
-recursive-include authlib/static *
-recursive-include authlib/locale *
-recursive-include authlib/templates *
-recursive-include authlib/admin_oauth/static *
-recursive-include authlib/admin_oauth/locale *
-recursive-include authlib/admin_oauth/templates *
+recursive-include authlib *.html *.po *.mo *.js *.css

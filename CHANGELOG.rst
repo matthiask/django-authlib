@@ -10,6 +10,9 @@ Change log
   online access only (we do not need offline access).
 - Added the ``authlib.admin_oauth`` app for a minimal Google OAuth2
   authentication solution for Django's administration interface.
+- Added the ``authlib.little_auth`` app containing a minimal user model
+  with email as username for a quick and dirty ``auth.User``
+  replacement.
 
 
 `0.3`_ (2016-12-08)
