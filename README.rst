@@ -53,7 +53,7 @@ writing ``django-authlib``'s Python code is less than 500 lines)::
     from authlib import views
     from authlib.facebook import FacebookOAuth2Client
     from authlib.google import GoogleOAuth2Client
-    lrom authlib.twitter import TwitterOAuthClient
+    from authlib.twitter import TwitterOAuthClient
 
     urlpatterns = [
         url(
