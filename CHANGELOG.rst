@@ -3,10 +3,10 @@ Change log
 ==========
 
 `Next version`_
-~~~~~~~~~~~~~~~
+===============
 
 `0.4`_ (2017-05-11)
-~~~~~~~~~~~~~~~~~~~
+===================
 
 - Added some documentation to the README.
 - Google client: Removed the deprecated profile scope, and switched to
@@ -21,7 +21,7 @@ Change log
 
 
 `0.3`_ (2016-12-08)
-~~~~~~~~~~~~~~~~~~~
+===================
 
 - Fixed the redirect URL generation of the Facebook and Google client.
 - Changed the name of the post login redirect cookie from ``next`` to
@@ -34,7 +34,7 @@ Change log
 
 
 `0.2`_ (2016-11-22)
-~~~~~~~~~~~~~~~~~~~
+===================
 
 - Added views for registration and logging in and out.
 - Added a base user model and an authentication backend for
@@ -42,7 +42,7 @@ Change log
 
 
 `0.1`_ (2016-11-21)
-~~~~~~~~~~~~~~~~~~~
+===================
 
 - Initial release containing helpers for authentication using an email
   address, either verified by sending a magic link or retrieved from
