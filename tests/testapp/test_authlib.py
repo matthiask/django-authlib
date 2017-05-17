@@ -5,6 +5,7 @@ from django.utils.translation import deactivate_all
 
 from authlib.admin_oauth import views as admin_oauth_views
 from authlib.little_auth.models import User
+from authlib.facebook import FacebookOAuth2Client
 
 
 def mock_admin_oauth_client(user_data, module, client):
@@ -84,4 +85,39 @@ class Test(TestCase):
         self.assertRedirects(
             response,
             '/admin/login/',
+        )
+
+    def test_authlib(self):
+        self.assertEqual(
+            set(User.objects.values_list('email', flat=True)),
+            {'admin@example.com'},
+        )
+
+        client = Client()
+        response = client.get('/login/?next=/?keep-this=1')
+        for snip in [
+            '<label for="id_username">Email:</label>',
+            '<a href="/oauth/facebook/">Facebook</a>',
+            '<a href="/oauth/google/">Google</a>',
+            '<a href="/oauth/twitter/">Twitter</a>',
+            '<a href="/email/">Magic link by Email</a>',
+        ]:
+            self.assertContains(
+                response,
+                snip,
+            )
+
+        FacebookOAuth2Client.get_user_data = lambda self: {
+            'email': 'test@example.com',
+        }
+        response = client.get('/oauth/facebook/?code=bla')
+        self.assertRedirects(
+            response,
+            '/?keep-this=1',
+            fetch_redirect_response=False,
+        )
+
+        self.assertEqual(
+            set(User.objects.values_list('email', flat=True)),
+            {'admin@example.com', 'test@example.com'},
         )
