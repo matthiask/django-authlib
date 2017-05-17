@@ -1,0 +1,11 @@
+{% load i18n %}
+{% trans "Registration link" %}
+
+{% trans "Click the following link to activate your account:" %}
+
+{{ url }}
+
+{% blocktrans %}Please note that this link expires after 3 hours. If you wait
+longer, you'll have to request another registration link.{% endblocktrans %}
+
+{% trans "Best regards" %}
