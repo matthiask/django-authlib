@@ -1,3 +1,5 @@
+import re
+
 from django.conf import settings
 from django.contrib import auth, messages
 from django.shortcuts import redirect
@@ -9,6 +11,7 @@ from authlib.google import GoogleOAuth2Client
 
 
 REDIRECT_SESSION_KEY = 'admin-oauth-next'
+ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 
 
 def retrieve_next(request):
@@ -31,8 +34,8 @@ def admin_oauth(request):
     email = user_data.get('email', '')
 
     if email:
-        for domain, user_mail in settings.ADMIN_OAUTH_DOMAINS:
-            if email.endswith(domain):
+        for pattern, user_mail in ADMIN_OAUTH_PATTERNS:
+            if re.search(pattern, email):
                 user = auth.authenticate(email=user_mail)
                 if user and user.is_staff:
                     auth.login(request, user)

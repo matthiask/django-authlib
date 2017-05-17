@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+- Moved from ``ADMIN_OAUTH_DOMAINS`` to ``ADMIN_OAUTH_PATTERNS`` to
+  allow regular expression searching.
+
+
 `0.4`_ (2017-05-11)
 ===================
 

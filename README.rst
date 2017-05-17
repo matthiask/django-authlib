@@ -114,11 +114,11 @@ Installation is as follows:
   ``django.contrib.admin``, so that our login template is picked up.
 - Add ``GOOGLE_CLIENT_ID`` and ``GOOGLE_CLIENT_SECRET`` to your settings
   as described above.
-- Add a ``ADMIN_OAUTH_DOMAINS`` setting (the first item is the domain,
+- Add a ``ADMIN_OAUTH_PATTERNS`` setting (the first item is the domain,
   the second the email address of an existing staff account)::
 
-    ADMIN_OAUTH_DOMAINS = [
-        ('@example.com', 'admin@example.com'),
+    ADMIN_OAUTH_PATTERNS = [
+        (r'@example\.com$', 'admin@example.com'),
     ]
 
 - Add an entry to your URLconf::
