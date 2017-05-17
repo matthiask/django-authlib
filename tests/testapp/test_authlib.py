@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from django.test import Client, TestCase
 from django.utils.translation import deactivate_all
 
@@ -18,6 +20,25 @@ def merge_dicts(*dicts):
     for d in dicts:
         res.update(d)
     return res
+
+
+def mock_admin_oauth_client(email):
+    class mock(object):
+        def __init__(self, request):
+            pass
+
+        def get_user_data(self):
+            return {'email': email}
+
+    from authlib.admin_oauth import views
+
+    @contextmanager
+    def manager():
+        views.GoogleOAuth2Client, orig = mock, views.GoogleOAuth2Client
+        yield
+        views.GoogleOAuth2Client = orig
+
+    return manager
 
 
 class Test(TestCase):
@@ -51,4 +72,24 @@ class Test(TestCase):
         self.assertEqual(
             client.session['admin-oauth-next'],
             '/admin/little_auth/',
+        )
+
+        with mock_admin_oauth_client('blaaa@example.com')():
+            response = client.get('/admin/__oauth__/?code=bla')
+        self.assertRedirects(
+            response,
+            '/admin/little_auth/',
+        )
+
+        self.assertEqual(
+            client.get('/admin/little_auth/').status_code,
+            200,
+        )
+
+        client = Client()
+        with mock_admin_oauth_client('invalid@domain.tld')():
+            response = client.get('/admin/__oauth__/?code=bla')
+        self.assertRedirects(
+            response,
+            '/admin/login/',
         )

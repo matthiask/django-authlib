@@ -72,6 +72,10 @@ except ImportError:  # pragma: no cover
     pass
 
 AUTH_USER_MODEL = 'little_auth.User'
+AUTHENTICATION_BACKENDS = (
+    'authlib.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+)
 GOOGLE_CLIENT_ID = 'empty'
 GOOGLE_CLIENT_SECRET = 'empty'
 TWITTER_CLIENT_ID = 'empty'
@@ -79,5 +83,5 @@ TWITTER_CLIENT_SECRET = 'empty'
 FACEBOOK_CLIENT_ID = 'empty'
 FACEBOOK_CLIENT_SECRET = 'empty'
 ADMIN_OAUTH_PATTERNS = [
-    (r'@example\.com', 'admin@example.com'),
+    (r'@example\.com$', 'admin@example.com'),
 ]
