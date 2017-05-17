@@ -2,6 +2,9 @@
 django-authlib - Authentication utils for Django
 ================================================
 
+.. image:: https://travis-ci.org/matthiask/django-authlib.svg?branch=master
+   :target: https://travis-ci.org/matthiask/django-authlib
+
 authlib is a collection of authentication utilities for implementing
 passwordless authentication. This is achieved by either sending
 cryptographically signed links by email, or by fetching the email
