@@ -5,9 +5,13 @@ Change log
 `Next version`_
 ===============
 
+`0.5`_ (2017-05-17)
+===================
+
 - Moved from ``ADMIN_OAUTH_DOMAINS`` to ``ADMIN_OAUTH_PATTERNS`` to
   allow regular expression searching.
 - Finally started adding tests.
+- Added django-authlib_ documentation to Read the Docs.
 
 
 `0.4`_ (2017-05-11)
@@ -53,9 +57,11 @@ Change log
   address, either verified by sending a magic link or retrieved from
   Facebook, Google or Twitter.
 
+.. _django-authlib: https://django-authlib.readthedocs.io/
 
 .. _0.1: https://github.com/matthiask/django-authlib/commit/0e4a81c11
 .. _0.2: https://github.com/matthiask/django-authlib/compare/0.1...0.2
 .. _0.3: https://github.com/matthiask/django-authlib/compare/0.2...0.3
 .. _0.4: https://github.com/matthiask/django-authlib/compare/0.3...0.4
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.4...master
+.. _0.5: https://github.com/matthiask/django-authlib/compare/0.4...0.5
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.5...master
