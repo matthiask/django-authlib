@@ -3,42 +3,26 @@ from contextlib import contextmanager
 from django.test import Client, TestCase
 from django.utils.translation import deactivate_all
 
+from authlib.admin_oauth import views as admin_oauth_views
 from authlib.little_auth.models import User
 
 
-def zero_management_form_data(prefix):
-    return {
-        '%s-TOTAL_FORMS' % prefix: 0,
-        '%s-INITIAL_FORMS' % prefix: 0,
-        '%s-MIN_NUM_FORMS' % prefix: 0,
-        '%s-MAX_NUM_FORMS' % prefix: 1000,
-    }
-
-
-def merge_dicts(*dicts):
-    res = {}
-    for d in dicts:
-        res.update(d)
-    return res
-
-
-def mock_admin_oauth_client(email):
+def mock_admin_oauth_client(user_data, module, client):
     class mock(object):
         def __init__(self, request):
             pass
 
         def get_user_data(self):
-            return {'email': email}
-
-    from authlib.admin_oauth import views
+            return user_data
 
     @contextmanager
     def manager():
-        views.GoogleOAuth2Client, orig = mock, views.GoogleOAuth2Client
+        orig = getattr(module, client)
+        setattr(module, client, mock)
         yield
-        views.GoogleOAuth2Client = orig
+        setattr(module, client, orig)
 
-    return manager
+    return manager()
 
 
 class Test(TestCase):
@@ -74,7 +58,11 @@ class Test(TestCase):
             '/admin/little_auth/',
         )
 
-        with mock_admin_oauth_client('blaaa@example.com')():
+        with mock_admin_oauth_client(
+                user_data={'email': 'blaaa@example.com'},
+                module=admin_oauth_views,
+                client='GoogleOAuth2Client',
+        ):
             response = client.get('/admin/__oauth__/?code=bla')
         self.assertRedirects(
             response,
@@ -87,7 +75,11 @@ class Test(TestCase):
         )
 
         client = Client()
-        with mock_admin_oauth_client('invalid@domain.tld')():
+        with mock_admin_oauth_client(
+                user_data={'email': 'blaaa@invalid.tld'},
+                module=admin_oauth_views,
+                client='GoogleOAuth2Client',
+        ):
             response = client.get('/admin/__oauth__/?code=bla')
         self.assertRedirects(
             response,

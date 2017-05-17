@@ -1,5 +1,4 @@
 import re
-import time
 
 from django.core import mail
 from django.test import TestCase
@@ -17,7 +16,6 @@ from authlib.email import get_signer, send_registration_mail
 
 def _messages(response):
     return [m.message for m in response.context['messages']]
-
 
 
 class RegistrationTest(TestCase):
@@ -79,7 +77,6 @@ class RegistrationTest(TestCase):
         user = User.objects.get()
         self.assertEqual(user.email, 'test@example.com')
 
-        time.sleep(1.1)
         user.last_login = timezone.now()
         user.save()
 
@@ -90,7 +87,7 @@ class RegistrationTest(TestCase):
         self.assertRedirects(response, '../')
 
         response = self.client.get(
-            url.replace('/email/', '/er-quick/', 1),
+            url.replace('/email/', '/email-quick/', 1),
             follow=True,
         )
         self.assertEqual(
