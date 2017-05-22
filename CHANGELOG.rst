@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+- Fixed usage of a few deprecated APIs.
+
+
 `0.5`_ (2017-05-17)
 ===================
 
