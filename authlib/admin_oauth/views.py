@@ -1,5 +1,6 @@
 import re
 
+from django import VERSION
 from django.conf import settings
 from django.contrib import auth, messages
 from django.shortcuts import redirect
@@ -14,10 +15,20 @@ REDIRECT_SESSION_KEY = 'admin-oauth-next'
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 
 
+if VERSION < (1, 11):
+    _orig_is_safe_url = is_safe_url
+    def is_safe_url(url, allowed_hosts):
+        host, = allowed_hosts
+        return _orig_is_safe_url(url=url, host=host)
+
+
 def retrieve_next(request):
     next = request.session.pop(REDIRECT_SESSION_KEY, None)
-    print('GOT', next, is_safe_url(url=next, host=request.get_host()))
-    return next if is_safe_url(url=next, host=request.get_host()) else None
+    return (
+        next
+        if is_safe_url(url=next, allowed_hosts=[request.get_host()])
+        else None
+    )
 
 
 @never_cache
