@@ -3,11 +3,13 @@ sudo: false
 python:
   - "3.5"
 env:
-  - REQ="Django>=1.10,<1.11"
-  - REQ="Django>=1.11,<2.0"
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+- REQ="Django>=1.10,<1.11"
+- REQ="Django>=1.11,<2.0"
+- REQ="https://github.com/django/django/archive/master.zip#egg=Django"
+matrix:
+  allow_failures:
+    - env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
 install:
   - pip install $REQ pytz requests_oauthlib
   - python setup.py install
-# command to run tests, e.g. python setup.py test
 script: "cd tests && ./manage.py test testapp"

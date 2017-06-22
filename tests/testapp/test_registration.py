@@ -5,13 +5,15 @@ from django.test import TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
 from django.utils.http import urlunquote
+
+from authlib.email import get_signer, send_registration_mail
+from authlib.little_auth.models import User
+
+
 try:
     from django.urls import reverse
 except ImportError:  # pragma: no cover
     from django.core.urlresolvers import reverse
-
-from authlib.little_auth.models import User
-from authlib.email import get_signer, send_registration_mail
 
 
 def _messages(response):

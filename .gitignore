@@ -1,13 +1,10 @@
 *.py?
-*~
 *.sw?
-.DS_Store
-._*
-*.egg-info
+*~
+.coverage
+.tox
+/*.egg-info
 /MANIFEST
-_build
 build
 dist
-venv
 htmlcov
-.coverage

@@ -4,8 +4,8 @@ from django.test import Client, TestCase
 from django.utils.translation import deactivate_all
 
 from authlib.admin_oauth import views as admin_oauth_views
-from authlib.little_auth.models import User
 from authlib.facebook import FacebookOAuth2Client
+from authlib.little_auth.models import User
 
 
 def mock_admin_oauth_client(user_data, module, client):
