@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from django.utils.http import is_safe_url
+from django.utils.inspect import func_supports_parameter
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
@@ -17,7 +18,11 @@ REDIRECT_COOKIE_NAME = 'authlib-next'
 
 def retrieve_next(request):
     next = request.COOKIES.get(REDIRECT_COOKIE_NAME)
-    return next if is_safe_url(url=next, host=request.get_host()) else None
+    if func_supports_parameter(is_safe_url, 'allowed_hosts'):  # Django 1.11
+        kw = {'allowed_hosts': {request.get_host()}}
+    else:
+        kw = {'host': request.get_host()}
+    return next if is_safe_url(url=next, **kw) else None
 
 
 def post_login_response(request, new_user):
