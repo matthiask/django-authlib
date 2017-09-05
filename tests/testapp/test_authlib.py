@@ -121,3 +121,14 @@ class Test(TestCase):
             set(User.objects.values_list('email', flat=True)),
             {'admin@example.com', 'test@example.com'},
         )
+
+    def test_str_and_email_obfuscate(self):
+        user = User(email='just-testing@example.com')
+        self.assertEqual(
+            user.get_full_name(),
+            'jus***@***.com',
+        )
+        self.assertEqual(
+            str(user),
+            'jus***@***.com',
+        )
