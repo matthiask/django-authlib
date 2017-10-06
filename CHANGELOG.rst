@@ -8,6 +8,8 @@ Change log
 - Fixed usage of a few deprecated APIs.
 - Modified ``little_auth.User`` to fall back to an obfuscated email
   address if the full name is empty.
+- Made it possible to override the default max age of three hours for
+  magic links sent by email.
 
 
 `0.5`_ (2017-05-17)

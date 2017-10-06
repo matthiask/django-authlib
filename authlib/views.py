@@ -128,7 +128,8 @@ class EmailRegistrationForm(forms.Form):
 @never_cache
 def email_registration(request, code=None,
                        registration_form=EmailRegistrationForm,
-                       post_login_response=post_login_response):
+                       post_login_response=post_login_response,
+                       max_age=3600 * 3):
     User = auth.get_user_model()
 
     if code is None:
@@ -153,7 +154,7 @@ def email_registration(request, code=None,
 
     else:
         try:
-            email, email_of_user = decode(code, max_age=3600 * 3)
+            email, email_of_user = decode(code, max_age=max_age)
         except ValidationError as exc:
             [messages.error(request, msg) for msg in exc.messages]
             return redirect('../')
