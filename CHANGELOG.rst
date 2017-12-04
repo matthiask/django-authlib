@@ -10,6 +10,9 @@ Change log
   address if the full name is empty.
 - Made it possible to override the default max age of three hours for
   magic links sent by email.
+- Fixed a problem where the ``little_auth`` migrations were depending on
+  the latest ``django.contrib.auth`` migration instead of the first
+  migration without good reason.
 
 
 `0.5`_ (2017-05-17)
