@@ -69,11 +69,11 @@ def oauth2(request, client_class, post_login_response=post_login_response):
 
     if user_data.get('email'):
         email = user_data.pop('email')
-        _u, created = User.objects.get_or_create(
+        _u, new_user = User.objects.get_or_create(
             email=email,
             defaults=user_data,
         )
-        if created:
+        if new_user:
             messages.success(
                 request,
                 _('Welcome! Please fill in your details.'))
@@ -86,7 +86,7 @@ def oauth2(request, client_class, post_login_response=post_login_response):
                 request,
                 _('No user with email address %s found.') % email)
 
-        return post_login_response(request, new_user)
+        return post_login_response(request, new_user=new_user)
 
     else:
         messages.error(
@@ -156,10 +156,10 @@ def email_registration(request, code=None,
             [messages.error(request, msg) for msg in exc.messages]
             return redirect('../')
 
-        _u, created = User.objects.get_or_create(
+        _u, new_user = User.objects.get_or_create(
             email=email,
         )
-        if created:
+        if new_user:
             messages.success(
                 request,
                 _('Welcome! Please fill in your details.'))
@@ -168,7 +168,7 @@ def email_registration(request, code=None,
         if user and user.is_active:
             auth.login(request, user)
 
-        return post_login_response(request, new_user)
+        return post_login_response(request, new_user=new_user)
 
 
 @never_cache

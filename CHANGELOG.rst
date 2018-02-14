@@ -8,6 +8,8 @@ Change log
 - Fixed a race condition when creating new users by using
   ``get_or_create`` instead of some homegrown ``exists`` and
   ``create`` trickery.
+- Changed all locations to pass ``new_user`` as keyword argument to
+  ``post_login_response``.
 
 
 `0.6`_ (2017-12-04)
