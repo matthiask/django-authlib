@@ -69,17 +69,14 @@ def oauth2(request, client_class, post_login_response=post_login_response):
 
     if user_data.get('email'):
         email = user_data.pop('email')
-        new_user = False
-
-        if not User.objects.filter(email=email).exists():
-            User.objects.create(
-                email=email,
-                **user_data
-            )
+        _u, created = User.objects.get_or_create(
+            email=email,
+            defaults=user_data,
+        )
+        if created:
             messages.success(
                 request,
                 _('Welcome! Please fill in your details.'))
-            new_user = True
 
         user = auth.authenticate(email=email)
         if user and user.is_active:
@@ -159,19 +156,16 @@ def email_registration(request, code=None,
             [messages.error(request, msg) for msg in exc.messages]
             return redirect('../')
 
-        new_user = False
-        if not User.objects.filter(email=email).exists():
-            User.objects.create(
-                email=email,
-            )
+        _u, created = User.objects.get_or_create(
+            email=email,
+        )
+        if created:
             messages.success(
                 request,
                 _('Welcome! Please fill in your details.'))
-            new_user = True
 
         user = auth.authenticate(email=email)
         if user and user.is_active:
-            # messages.success(request, _('Hello, %s') % user)
             auth.login(request, user)
 
         return post_login_response(request, new_user)

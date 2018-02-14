@@ -5,6 +5,11 @@ Change log
 `Next version`_
 ===============
 
+- Fixed a race condition when creating new users by using
+  ``get_or_create`` instead of some homegrown ``exists`` and
+  ``create`` trickery.
+
+
 `0.6`_ (2017-12-04)
 ===================
 
