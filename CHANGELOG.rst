@@ -10,6 +10,9 @@ Change log
   ``create`` trickery.
 - Changed all locations to pass ``new_user`` as keyword argument to
   ``post_login_response``.
+- Changed the ``admin/login.html`` template in ``authlib.admin_oauth``:
+  Moved the SSO login button before the login form to make it clear that
+  SSO is the preferred authentication method.
 
 
 `0.6`_ (2017-12-04)
