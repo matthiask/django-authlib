@@ -19,8 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: templates/admin/login.html:7
-msgid "Log in using SSO"
-msgstr "Mit SSO anmelden"
+msgid "Log in using Google"
+msgstr "Mit Google anmelden"
 
 #: views.py:43
 msgid "No email address received or email domain unknown."

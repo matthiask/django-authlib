@@ -45,7 +45,7 @@ class Test(TestCase):
             response,
             '<a class="button"'
             ' href="/admin/__oauth__/?next=/admin/little_auth/">'
-            'Log in using SSO</a>'
+            'Log in using Google</a>'
         )
 
         response = client.get('/admin/__oauth__/?next=/admin/little_auth/')

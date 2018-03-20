@@ -4,10 +4,16 @@
 
 {% block extrahead %}{{ block.super }}
 <style>
+#content-main {
+  float: none;
+}
+#footer {
+  padding: 0;
+}
 .admin-sso {
-  border-bottom: 1px solid #ccc;
-  padding: 0 0 .75rem 0;
-  margin: 0 0 .25rem 0;
+  border-top: 1px solid #ccc;
+  padding: .75rem 0 0 0;
+  margin: .75rem 0 0 0;
   text-align: center;
 }
 .admin-sso .button {
@@ -23,8 +29,8 @@
 {% endblock %}
 
 {% block content %}
-<div class="admin-sso">
-  <a class="button" href="{% url 'admin_oauth' %}?next={{ request.GET.next }}">{% trans "Log in using SSO" %}</a>
-</div>
 {{ block.super }}
+<div class="admin-sso">
+  <a class="button" href="{% url 'admin_oauth' %}?next={{ request.GET.next }}">{% trans "Log in using Google" %}</a>
+</div>
 {% endblock content %}
