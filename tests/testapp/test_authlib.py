@@ -43,7 +43,8 @@ class Test(TestCase):
         response = client.get('/admin/login/?next=/admin/little_auth/')
         self.assertContains(
             response,
-            '<a href="/admin/__oauth__/?next=/admin/little_auth/">'
+            '<a class="button"'
+            ' href="/admin/__oauth__/?next=/admin/little_auth/">'
             'Log in using SSO</a>'
         )
 
