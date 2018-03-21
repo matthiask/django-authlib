@@ -127,8 +127,9 @@ Installation is as follows:
   ``django.contrib.admin``, so that our login template is picked up.
 - Add ``GOOGLE_CLIENT_ID`` and ``GOOGLE_CLIENT_SECRET`` to your settings
   as described above.
-- Add a ``ADMIN_OAUTH_PATTERNS`` setting (the first item is the domain,
-  the second the email address of an existing staff account)::
+- Add a ``ADMIN_OAUTH_PATTERNS`` setting. The first item is the domain,
+  the second the email address of a staff account. If no matching staff
+  account exists, authentication fails::
 
     ADMIN_OAUTH_PATTERNS = [
         (r'@example\.com$', 'admin@example.com'),
@@ -143,6 +144,15 @@ Installation is as follows:
 
 - Add ``https://yourdomain.com/admin/__oauth__/`` as a valid redirect
   URI in your Google developers console.
+
+Additionally, it is also allowed to use a callable instead of the email
+address in the ``ADMIN_OAUTH_PATTERNS`` setting; the callable is passed
+the result of matching the regex. If a resulting email address does not
+exist, authentication (of course) fails::
+
+    ADMIN_OAUTH_PATTERNS = [
+        (r'^.*@example\.org$', lambda match: match[0]),
+    ]
 
 
 Little Auth

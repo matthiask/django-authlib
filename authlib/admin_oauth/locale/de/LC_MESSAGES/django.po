@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-09 14:43+0200\n"
+"POT-Creation-Date: 2018-03-21 08:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,10 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: templates/admin/login.html:7
+#: admin_oauth/templates/admin/login.html:34
 msgid "Log in using Google"
 msgstr "Mit Google anmelden"
 
-#: views.py:43
-msgid "No email address received or email domain unknown."
-msgstr "Keine Emailadresse erhalten oder Email-Domain unbekannt."
+#: admin_oauth/views.py:61
+#, python-format
+msgid "No matching staff users for email address '%s'"
+msgstr "Kein passendes Mitarbeiter-Konto für Emailadresse '%s' gefunden."
+
+#: admin_oauth/views.py:64
+msgid "Could not determine your email address."
+msgstr "Konnte Emailadresse nicht bestimmen."

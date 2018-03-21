@@ -88,6 +88,50 @@ class Test(TestCase):
             '/admin/login/',
         )
 
+    def test_admin_oauth_match(self):
+        User.objects.create_superuser('bla@example.org', 'blabla')
+
+        client = Client()
+        with mock_admin_oauth_client(
+                user_data={'email': 'bla@example.org'},
+                module=admin_oauth_views,
+                client='GoogleOAuth2Client',
+        ):
+            response = client.get('/admin/__oauth__/?code=bla')
+        self.assertRedirects(
+            response,
+            '/admin/',
+        )
+
+        # We are authenticated
+        self.assertEqual(
+            client.get('/admin/little_auth/').status_code,
+            200,
+        )
+
+    def test_admin_oauth_nomatch(self):
+        User.objects.create_superuser('bla@example.org', 'blabla')
+
+        client = Client()
+        with mock_admin_oauth_client(
+                user_data={'email': 'blaa@example.org'},
+                module=admin_oauth_views,
+                client='GoogleOAuth2Client',
+        ):
+            response = client.get('/admin/__oauth__/?code=bla')
+
+        # We are not authenticated
+        self.assertRedirects(
+            response,
+            '/admin/login/',
+        )
+
+        messages = [str(m) for m in response.wsgi_request._messages]
+        self.assertEqual(
+            messages,
+            ["No matching staff users for email address 'blaa@example.org'"],
+        )
+
     def test_authlib(self):
         self.assertEqual(
             set(User.objects.values_list('email', flat=True)),

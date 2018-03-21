@@ -83,4 +83,8 @@ FACEBOOK_CLIENT_ID = 'empty'
 FACEBOOK_CLIENT_SECRET = 'empty'
 ADMIN_OAUTH_PATTERNS = [
     (r'@example\.com$', 'admin@example.com'),
+    # This would also work, but since we match the whole string
+    # we can just use match[0]
+    # (r'^(.*@example\.org)$', lambda match: match[1]),
+    (r'^.*@example\.org$', lambda match: match.group(0)),
 ]

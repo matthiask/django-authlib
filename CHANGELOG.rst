@@ -13,6 +13,8 @@ Change log
 - Changed the ``admin/login.html`` template in ``authlib.admin_oauth``
   to make the SSO button a bit more prominent. Also, replaced "SSO" with
   "Google" because that is all that is supported right now.
+- Added the possibility to use callables in ``ADMIN_OAUTH_PATTERNS``
+  instead of hard-coded staff email addresses.
 
 
 `0.6`_ (2017-12-04)
