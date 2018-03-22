@@ -15,6 +15,8 @@ Change log
   "Google" because that is all that is supported right now.
 - Added the possibility to use callables in ``ADMIN_OAUTH_PATTERNS``
   instead of hard-coded staff email addresses.
+- Extracted the confirmation code generation from
+  ``get_confirmation_url`` as ``get_confirmation_code``.
 
 
 `0.6`_ (2017-12-04)
