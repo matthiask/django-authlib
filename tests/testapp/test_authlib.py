@@ -28,8 +28,7 @@ def mock_admin_oauth_client(user_data, module, client):
 
 class Test(TestCase):
     def setUp(self):
-        self.user = User.objects.create_superuser(
-            'admin@example.com', 'blabla')
+        self.user = User.objects.create_superuser("admin@example.com", "blabla")
         deactivate_all()
 
     def login(self):
@@ -40,106 +39,83 @@ class Test(TestCase):
     def test_admin_oauth(self):
         client = Client()
 
-        response = client.get('/admin/login/?next=/admin/little_auth/')
+        response = client.get("/admin/login/?next=/admin/little_auth/")
         self.assertContains(
             response,
             '<a class="button"'
             ' href="/admin/__oauth__/?next=/admin/little_auth/">'
-            'Log in using Google</a>'
+            "Log in using Google</a>",
         )
 
-        response = client.get('/admin/__oauth__/?next=/admin/little_auth/')
+        response = client.get("/admin/__oauth__/?next=/admin/little_auth/")
         self.assertEqual(response.status_code, 302)
         self.assertIn(
-            'https://accounts.google.com/o/oauth2/v2/auth?response_type=code'
-            '&client_id=empty&redirect_uri=',
-            response['Location'],
+            "https://accounts.google.com/o/oauth2/v2/auth?response_type=code"
+            "&client_id=empty&redirect_uri=",
+            response["Location"],
         )
-        self.assertEqual(
-            client.session['admin-oauth-next'],
-            '/admin/little_auth/',
-        )
+        self.assertEqual(client.session["admin-oauth-next"], "/admin/little_auth/")
 
         with mock_admin_oauth_client(
-                user_data={'email': 'blaaa@example.com'},
-                module=admin_oauth_views,
-                client='GoogleOAuth2Client',
+            user_data={"email": "blaaa@example.com"},
+            module=admin_oauth_views,
+            client="GoogleOAuth2Client",
         ):
-            response = client.get('/admin/__oauth__/?code=bla')
-        self.assertRedirects(
-            response,
-            '/admin/little_auth/',
-        )
+            response = client.get("/admin/__oauth__/?code=bla")
+        self.assertRedirects(response, "/admin/little_auth/")
 
-        self.assertEqual(
-            client.get('/admin/little_auth/').status_code,
-            200,
-        )
+        self.assertEqual(client.get("/admin/little_auth/").status_code, 200)
 
         client = Client()
         with mock_admin_oauth_client(
-                user_data={'email': 'blaaa@invalid.tld'},
-                module=admin_oauth_views,
-                client='GoogleOAuth2Client',
+            user_data={"email": "blaaa@invalid.tld"},
+            module=admin_oauth_views,
+            client="GoogleOAuth2Client",
         ):
-            response = client.get('/admin/__oauth__/?code=bla')
-        self.assertRedirects(
-            response,
-            '/admin/login/',
-        )
+            response = client.get("/admin/__oauth__/?code=bla")
+        self.assertRedirects(response, "/admin/login/")
 
     def test_admin_oauth_match(self):
-        User.objects.create_superuser('bla@example.org', 'blabla')
+        User.objects.create_superuser("bla@example.org", "blabla")
 
         client = Client()
         with mock_admin_oauth_client(
-                user_data={'email': 'bla@example.org'},
-                module=admin_oauth_views,
-                client='GoogleOAuth2Client',
+            user_data={"email": "bla@example.org"},
+            module=admin_oauth_views,
+            client="GoogleOAuth2Client",
         ):
-            response = client.get('/admin/__oauth__/?code=bla')
-        self.assertRedirects(
-            response,
-            '/admin/',
-        )
+            response = client.get("/admin/__oauth__/?code=bla")
+        self.assertRedirects(response, "/admin/")
 
         # We are authenticated
-        self.assertEqual(
-            client.get('/admin/little_auth/').status_code,
-            200,
-        )
+        self.assertEqual(client.get("/admin/little_auth/").status_code, 200)
 
     def test_admin_oauth_nomatch(self):
-        User.objects.create_superuser('bla@example.org', 'blabla')
+        User.objects.create_superuser("bla@example.org", "blabla")
 
         client = Client()
         with mock_admin_oauth_client(
-                user_data={'email': 'blaa@example.org'},
-                module=admin_oauth_views,
-                client='GoogleOAuth2Client',
+            user_data={"email": "blaa@example.org"},
+            module=admin_oauth_views,
+            client="GoogleOAuth2Client",
         ):
-            response = client.get('/admin/__oauth__/?code=bla')
+            response = client.get("/admin/__oauth__/?code=bla")
 
         # We are not authenticated
-        self.assertRedirects(
-            response,
-            '/admin/login/',
-        )
+        self.assertRedirects(response, "/admin/login/")
 
         messages = [str(m) for m in response.wsgi_request._messages]
         self.assertEqual(
-            messages,
-            ["No matching staff users for email address 'blaa@example.org'"],
+            messages, ["No matching staff users for email address 'blaa@example.org'"]
         )
 
     def test_authlib(self):
         self.assertEqual(
-            set(User.objects.values_list('email', flat=True)),
-            {'admin@example.com'},
+            set(User.objects.values_list("email", flat=True)), {"admin@example.com"}
         )
 
         client = Client()
-        response = client.get('/login/?next=/?keep-this=1')
+        response = client.get("/login/?next=/?keep-this=1")
         for snip in [
             '<label for="id_username">Email:</label>',
             '<a href="/oauth/facebook/">Facebook</a>',
@@ -147,33 +123,18 @@ class Test(TestCase):
             '<a href="/oauth/twitter/">Twitter</a>',
             '<a href="/email/">Magic link by Email</a>',
         ]:
-            self.assertContains(
-                response,
-                snip,
-            )
+            self.assertContains(response, snip)
 
-        FacebookOAuth2Client.get_user_data = lambda self: {
-            'email': 'test@example.com',
-        }
-        response = client.get('/oauth/facebook/?code=bla')
-        self.assertRedirects(
-            response,
-            '/?keep-this=1',
-            fetch_redirect_response=False,
-        )
+        FacebookOAuth2Client.get_user_data = lambda self: {"email": "test@example.com"}
+        response = client.get("/oauth/facebook/?code=bla")
+        self.assertRedirects(response, "/?keep-this=1", fetch_redirect_response=False)
 
         self.assertEqual(
-            set(User.objects.values_list('email', flat=True)),
-            {'admin@example.com', 'test@example.com'},
+            set(User.objects.values_list("email", flat=True)),
+            {"admin@example.com", "test@example.com"},
         )
 
     def test_str_and_email_obfuscate(self):
-        user = User(email='just-testing@example.com')
-        self.assertEqual(
-            user.get_full_name(),
-            'jus***@***.com',
-        )
-        self.assertEqual(
-            str(user),
-            'jus***@***.com',
-        )
+        user = User(email="just-testing@example.com")
+        self.assertEqual(user.get_full_name(), "jus***@***.com")
+        self.assertEqual(str(user), "jus***@***.com")

@@ -11,7 +11,7 @@ from django.views.decorators.cache import never_cache
 from authlib.google import GoogleOAuth2Client
 
 
-REDIRECT_SESSION_KEY = 'admin-oauth-next'
+REDIRECT_SESSION_KEY = "admin-oauth-next"
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 
 
@@ -25,25 +25,21 @@ if VERSION < (1, 11):
 
 def retrieve_next(request):
     next = request.session.pop(REDIRECT_SESSION_KEY, None)
-    return (
-        next
-        if is_safe_url(url=next, allowed_hosts=[request.get_host()])
-        else None
-    )
+    return next if is_safe_url(url=next, allowed_hosts=[request.get_host()]) else None
 
 
 @never_cache
 def admin_oauth(request):
     client = GoogleOAuth2Client(request)
 
-    if request.GET.get('next'):
-        request.session[REDIRECT_SESSION_KEY] = request.GET['next']
+    if request.GET.get("next"):
+        request.session[REDIRECT_SESSION_KEY] = request.GET["next"]
 
-    if all(key not in request.GET for key in ('code', 'oauth_token')):
+    if all(key not in request.GET for key in ("code", "oauth_token")):
         return redirect(client.get_authentication_url())
 
     user_data = client.get_user_data()
-    email = user_data.get('email', '')
+    email = user_data.get("email", "")
 
     if email:
         for pattern, user_mail in ADMIN_OAUTH_PATTERNS:
@@ -54,12 +50,11 @@ def admin_oauth(request):
                 user = auth.authenticate(email=user_mail)
                 if user and user.is_staff:
                     auth.login(request, user)
-                    return redirect(retrieve_next(request) or 'admin:index')
+                    return redirect(retrieve_next(request) or "admin:index")
 
         messages.error(
-            request,
-            _('No matching staff users for email address \'%s\'') % email,
+            request, _("No matching staff users for email address '%s'") % email
         )
     else:
-        messages.error(request, _('Could not determine your email address.'))
-    return redirect('admin:login')
+        messages.error(request, _("Could not determine your email address."))
+    return redirect("admin:login")

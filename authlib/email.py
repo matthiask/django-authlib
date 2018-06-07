@@ -34,29 +34,29 @@ def render_to_mail(template, context, **kwargs):
         message = render_to_mail('myproject/hello_mail', {}, to=[email])
         message.send()
     """
-    lines = iter(render_to_string('%s.txt' % template, context).splitlines())
+    lines = iter(render_to_string("%s.txt" % template, context).splitlines())
 
-    subject = ''
+    subject = ""
     while True:
         line = next(lines)
         if line:
             subject = line
             break
 
-    body = '\n'.join(lines).strip('\n')
+    body = "\n".join(lines).strip("\n")
     message = EmailMultiAlternatives(subject=subject, body=body, **kwargs)
 
     try:
         message.attach_alternative(
-            render_to_string('%s.html' % template, context),
-            'text/html')
+            render_to_string("%s.html" % template, context), "text/html"
+        )
     except TemplateDoesNotExist:
         pass
 
     return message
 
 
-def get_signer(salt='email_registration'):
+def get_signer(salt="email_registration"):
     """
     Returns the signer instance used to sign and unsign the registration
     link tokens
@@ -68,36 +68,32 @@ def get_last_login_timestamp(user):
     """
     Django 1.7 allows the `last_login` timestamp to be `None` for new users.
     """
-    return int(user.last_login.strftime('%s')) if user.last_login else 0
+    return int(user.last_login.strftime("%s")) if user.last_login else 0
 
 
 def get_confirmation_code(email, request, *, user=None):
     """
     Returns the code for the confirmation URL
     """
-    code = [email, '', '']
+    code = [email, "", ""]
     if user:
         code[1] = str(user.id)
         code[2] = int_to_base36(get_last_login_timestamp(user))
-    return get_signer().sign(':'.join(code))
+    return get_signer().sign(":".join(code))
 
 
-def get_confirmation_url(email, request, user=None,
-                         name='email_registration_confirm'):
+def get_confirmation_url(email, request, user=None, name="email_registration_confirm"):
     """
     Returns the confirmation URL
     """
-    code = [email, '', '']
+    code = [email, "", ""]
     if user:
         code[1] = str(user.id)
         code[2] = int_to_base36(get_last_login_timestamp(user))
 
-    return request.build_absolute_uri(reverse(
-        name,
-        kwargs={
-            'code': get_confirmation_code(email, request, user=user),
-        },
-    ))
+    return request.build_absolute_uri(
+        reverse(name, kwargs={"code": get_confirmation_code(email, request, user=user)})
+    )
 
 
 def send_registration_mail(email, *, request, user=None):
@@ -122,10 +118,8 @@ def send_registration_mail(email, *, request, user=None):
     """
 
     render_to_mail(
-        'registration/email_registration_email',
-        {
-            'url': get_confirmation_url(email, request, user=user),
-        },
+        "registration/email_registration_email",
+        {"url": get_confirmation_url(email, request, user=user)},
         to=[email],
     ).send()
 
@@ -144,37 +138,47 @@ def decode(code, *, max_age):
     try:
         data = get_signer().unsign(code, max_age=max_age)
     except signing.SignatureExpired:
-        raise ValidationError(_(
-            'The link is expired. Please request another registration link.'
-        ), code='email_registration_expired')
+        raise ValidationError(
+            _("The link is expired. Please request another registration link."),
+            code="email_registration_expired",
+        )
 
     except signing.BadSignature:
-        raise ValidationError(_(
-            'Unable to verify the signature. Please request a new'
-            ' registration link.'
-        ), code='email_registration_signature')
+        raise ValidationError(
+            _(
+                "Unable to verify the signature. Please request a new"
+                " registration link."
+            ),
+            code="email_registration_signature",
+        )
 
-    parts = data.split(':')
+    parts = data.split(":")
     if len(parts) != 3:
-        raise ValidationError(_(
-            'Something went wrong while decoding the'
-            ' registration request. Please try again.'
-        ), code='email_registration_broken')
+        raise ValidationError(
+            _(
+                "Something went wrong while decoding the"
+                " registration request. Please try again."
+            ),
+            code="email_registration_broken",
+        )
 
     email, uid, timestamp = parts
     if uid and timestamp:
         try:
             user = User.objects.get(pk=uid)
         except (User.DoesNotExist, TypeError, ValueError):
-            raise ValidationError(_(
-                'Something went wrong while decoding the'
-                ' registration request. Please try again.'
-            ), code='email_registration_invalid_uid')
+            raise ValidationError(
+                _(
+                    "Something went wrong while decoding the"
+                    " registration request. Please try again."
+                ),
+                code="email_registration_invalid_uid",
+            )
 
         if timestamp != int_to_base36(get_last_login_timestamp(user)):
-            raise ValidationError(_(
-                'The link has already been used.'
-            ), code='email_registration_used')
+            raise ValidationError(
+                _("The link has already been used."), code="email_registration_used"
+            )
 
     else:
         user = None

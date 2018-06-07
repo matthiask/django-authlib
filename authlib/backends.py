@@ -19,8 +19,11 @@ class EmailBackend(object):
             return None
 
     if VERSION < (1, 11):
+
         def authenticate(self, email):
             return _by_email(email)
+
     else:
+
         def authenticate(self, request, email):
             return _by_email(email)

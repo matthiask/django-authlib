@@ -1,4 +1,0 @@
-Django
-pytz
-coverage
-requests_oauthlib
