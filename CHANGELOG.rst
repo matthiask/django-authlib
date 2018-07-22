@@ -17,6 +17,7 @@ Change log
   instead of hard-coded staff email addresses.
 - Extracted the confirmation code generation from
   ``get_confirmation_url`` as ``get_confirmation_code``.
+- Fixed usage of deprecated Google OAuth2 scopes.
 
 
 `0.6`_ (2017-12-04)
