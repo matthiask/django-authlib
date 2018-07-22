@@ -8,7 +8,7 @@ from .base import OAuthClient
 class GoogleOAuth2Client(OAuthClient):
     authorization_base_url = "https://accounts.google.com/o/oauth2/v2/auth"
     token_url = "https://www.googleapis.com/oauth2/v4/token"
-    scope = ["email"]
+    scope = ["email", "profile"]
     client_id = settings.GOOGLE_CLIENT_ID
     client_secret = settings.GOOGLE_CLIENT_SECRET
 
@@ -35,6 +35,10 @@ class GoogleOAuth2Client(OAuthClient):
                 self._request.get_full_path()
             ),
         )
-        data = self._session.get("https://www.googleapis.com/oauth2/v1/userinfo").json()
+        data = self._session.get("https://www.googleapis.com/oauth2/v3/userinfo").json()
 
-        return {"email": data.get("email"), "full_name": data.get("name")}
+        return (
+            {"email": data.get("email"), "full_name": data.get("name")}
+            if data.get("email_verified")
+            else {}
+        )
