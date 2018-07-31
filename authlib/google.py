@@ -8,7 +8,7 @@ from .base import OAuthClient
 class GoogleOAuth2Client(OAuthClient):
     authorization_base_url = "https://accounts.google.com/o/oauth2/v2/auth"
     token_url = "https://www.googleapis.com/oauth2/v4/token"
-    scope = ["email", "profile"]
+    scope = "openid profile email"
     client_id = settings.GOOGLE_CLIENT_ID
     client_secret = settings.GOOGLE_CLIENT_SECRET
 
