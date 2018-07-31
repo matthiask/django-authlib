@@ -90,7 +90,7 @@ class EmailRegistrationForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self._request = kwargs.pop("request")
-        super().__init__(*args, **kwargs)
+        super(EmailRegistrationForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
         User = auth.get_user_model()

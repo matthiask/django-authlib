@@ -7,6 +7,8 @@ from django.urls import reverse
 from django.utils.http import int_to_base36
 from django.utils.translation import ugettext as _
 
+from authlib.utils import positional
+
 
 # Assumes that this is a model with an unique `email` field.
 User = get_user_model()
@@ -71,8 +73,9 @@ def get_last_login_timestamp(user):
     return int(user.last_login.strftime("%s")) if user.last_login else 0
 
 
-def get_confirmation_code(email, request, *, user=None):
-    """
+@positional(2)
+def get_confirmation_code(email, request, user=None):
+    """get_confirmation_code(email, request, *, user=None)
     Returns the code for the confirmation URL
     """
     code = [email, "", ""]
@@ -96,8 +99,9 @@ def get_confirmation_url(email, request, user=None, name="email_registration_con
     )
 
 
-def send_registration_mail(email, *, request, user=None):
-    """
+@positional(1)
+def send_registration_mail(email, request, user=None):
+    """send_registration_mail(email, *, request, user=None)
     Sends the registration mail
 
     * ``email``: The email address where the registration link should be
@@ -124,8 +128,9 @@ def send_registration_mail(email, *, request, user=None):
     ).send()
 
 
-def decode(code, *, max_age):
-    """
+@positional(1)
+def decode(code, max_age):
+    """decode(code, *, max_age)
     Decodes the code from the registration link and returns a tuple consisting
     of the verified email address and the associated user instance or ``None``
     if no user was passed to ``send_registration_mail``
