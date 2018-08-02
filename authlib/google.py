@@ -1,3 +1,5 @@
+import os
+
 from django.conf import settings
 
 from requests_oauthlib import OAuth2Session
@@ -13,6 +15,9 @@ class GoogleOAuth2Client(OAuthClient):
     client_secret = settings.GOOGLE_CLIENT_SECRET
 
     def __init__(self, request):
+        # let oauthlib be less strict on scope mismatch
+        os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
+
         self._request = request
         self._session = OAuth2Session(
             self.client_id,
