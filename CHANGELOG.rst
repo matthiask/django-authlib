@@ -19,6 +19,8 @@ Change log
   ``get_confirmation_url`` as ``get_confirmation_code``.
 - Fixed usage of deprecated Google OAuth2 scopes.
 - Added compatibility with Python 2.
+- Extracted the post login redirect cookie setting into a new
+  ``set_next_cookie`` decorator.
 
 
 `0.6`_ (2017-12-04)

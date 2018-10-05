@@ -1,3 +1,5 @@
+from functools import wraps
+
 from django import forms
 from django.conf import settings
 from django.contrib import auth, messages
@@ -14,6 +16,17 @@ from authlib.email import decode, send_registration_mail
 
 
 REDIRECT_COOKIE_NAME = "authlib-next"
+
+
+def set_next_cookie(view):
+    @wraps(view)
+    def fn(request, *args, **kwargs):
+        response = view(request, *args, **kwargs)
+        if request.GET.get("next"):
+            response.set_cookie(REDIRECT_COOKIE_NAME, request.GET["next"], max_age=600)
+        return response
+
+    return fn
 
 
 def retrieve_next(request):
@@ -33,6 +46,7 @@ def post_login_response(request, new_user):
 
 @never_cache
 @sensitive_post_parameters()
+@set_next_cookie
 def login(
     request,
     template_name="registration/login.html",
@@ -49,10 +63,7 @@ def login(
     else:
         form = authentication_form(request)
 
-    response = render(request, template_name, {"form": form})
-    if request.GET.get("next"):
-        response.set_cookie(REDIRECT_COOKIE_NAME, request.GET["next"], max_age=600)
-    return response
+    return render(request, template_name, {"form": form})
 
 
 @never_cache
