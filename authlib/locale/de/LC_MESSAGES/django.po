@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-21 08:47+0100\n"
+"POT-Creation-Date: 2018-11-04 20:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,62 +17,58 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: base.py:44 views.py:101
+#: base.py:41 views.py:123
 msgid "email"
 msgstr "Email"
 
-#: base.py:48
+#: base.py:42
 msgid "is active"
 msgstr "ist aktiv"
 
-#: base.py:49
+#: base.py:43
 msgid "is staff"
 msgstr "ist Mitarbeiter"
 
-#: base.py:50
+#: base.py:44
 msgid "date joined"
 msgstr "Konto seit"
 
-#: base.py:56
+#: base.py:50
 msgid "user"
 msgstr "Nutzer"
 
-#: base.py:57
+#: base.py:51
 msgid "users"
 msgstr "Nutzer"
 
-#: email.py:137
+#: email.py:153
 msgid "The link is expired. Please request another registration link."
 msgstr "Der Link ist abgelaufen. Bitte fordere einen anderen an."
 
-#: email.py:142
+#: email.py:160
 msgid "Unable to verify the signature. Please request a new registration link."
 msgstr "Konnte Signatur nicht verifizieren. Bitte fordere einen neuen Link an."
 
-#: email.py:149 email.py:159
+#: email.py:170 email.py:183
 msgid ""
 "Something went wrong while decoding the registration request. Please try "
 "again."
 msgstr "Etwas ging schief. Bitte versuche es nochmals."
 
-#: email.py:165
+#: email.py:191
 msgid "The link has already been used."
 msgstr "Der Link wurde schon verwendet."
 
-#: views.py:79 views.py:165
-msgid "Welcome! Please fill in your details."
-msgstr "Schön bist du bei uns. Bitte ergänze deine Angaben."
-
-#: views.py:87
+#: views.py:113
 #, python-format
 msgid "No user with email address %s found."
 msgstr "Kein Nutzer mit Emailadresse %s gefunden."
 
-#: views.py:94
+#: views.py:117
 msgid "Did not get an email address. Please try again."
 msgstr "Konnte Emailadresse nicht abholen. Bitte versuche es nochmals."
 
-#: views.py:114
+#: views.py:136
 #, python-format
 msgid ""
 "The email you entered (%(input)s) does not match the email of the account "
@@ -81,14 +77,10 @@ msgstr ""
 "Die Email die du angegeben hast (%(input)s) stimmt nicht mit der Email des "
 "Profils überein, mit dem du angemeldet bist (%(current)s)."
 
-#: views.py:120
+#: views.py:144
 msgid "This email address belongs to an inactive account."
 msgstr "Diese Emailadresse gehört zu einem inaktiven Konto."
 
-#: views.py:142
+#: views.py:171
 msgid "Please check your mailbox."
 msgstr "Bitte prüfe deine Mailbox."
-
-#: views.py:179
-msgid "You have been signed out."
-msgstr "Du hast dich abgemeldet."
