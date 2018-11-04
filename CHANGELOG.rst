@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+`0.7`_ (2018-11-04)
+===================
+
 - Fixed a race condition when creating new users by using
   ``get_or_create`` instead of some homegrown ``exists`` and
   ``create`` trickery.
@@ -115,4 +118,5 @@ Change log
 .. _0.4: https://github.com/matthiask/django-authlib/compare/0.3...0.4
 .. _0.5: https://github.com/matthiask/django-authlib/compare/0.4...0.5
 .. _0.6: https://github.com/matthiask/django-authlib/compare/0.5...0.6
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.6...master
+.. _0.7: https://github.com/matthiask/django-authlib/compare/0.6...0.7
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.7...master
