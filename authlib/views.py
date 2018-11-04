@@ -48,7 +48,15 @@ def post_logout_response(request):
     return redirect("login")
 
 
-def _do_login(request, email, **kwargs):
+def email_login(request, email, **kwargs):
+    """
+    Given a request, an email and optionally some additional data, ensure that
+    a user with the email address exists, and authenticate & login them right
+    away if the user is active.
+
+    Returns a tuple consisting of ``(user, created)`` upon success or ``(None,
+    None)`` when authentication fails.
+    """
     _u, created = auth.get_user_model()._default_manager.get_or_create(email=email)
     user = auth.authenticate(request, email=email)
     if user and user.is_active:  # The is_active check is possibly redundant.
@@ -90,7 +98,7 @@ def oauth2(request, client_class, post_login_response=post_login_response):
     email = user_data.pop("email", None)
 
     if email:
-        user, created = _do_login(request, email, user_data=user_data)
+        user, created = email_login(request, email, user_data=user_data)
         if not user:
             messages.error(request, _("No user with email address %s found.") % email)
         return post_login_response(request, new_user=created)
@@ -163,7 +171,7 @@ def email_registration(
             [messages.error(request, msg) for msg in exc.messages]
             return redirect("../")
 
-        _u, created = _do_login(request, email)
+        _u, created = email_login(request, email)
         return post_login_response(request, new_user=created)
 
 
