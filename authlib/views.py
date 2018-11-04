@@ -48,6 +48,13 @@ def post_logout_response(request):
     return redirect("login")
 
 
+def _do_login(request, **kwargs):
+    user = auth.authenticate(request, **kwargs)
+    if user and user.is_active:
+        auth.login(request, user)
+        return user
+
+
 @never_cache
 @sensitive_post_parameters()
 @set_next_cookie
@@ -83,10 +90,7 @@ def oauth2(request, client_class, post_login_response=post_login_response):
     if user_data.get("email"):
         email = user_data.pop("email")
         new_user = User.objects.get_or_create(email=email, defaults=user_data)[1]
-        user = auth.authenticate(email=email)
-        if user and user.is_active:
-            auth.login(request, user)
-        else:
+        if not _do_login(request, email=email):
             messages.error(request, _("No user with email address %s found.") % email)
 
         return post_login_response(request, new_user=new_user)
@@ -162,9 +166,7 @@ def email_registration(
             return redirect("../")
 
         new_user = User.objects.get_or_create(email=email)[1]
-        user = auth.authenticate(email=email)
-        if user and user.is_active:
-            auth.login(request, user)
+        _do_login(request, email=email)
 
         return post_login_response(request, new_user=new_user)
 
