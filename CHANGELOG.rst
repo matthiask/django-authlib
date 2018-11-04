@@ -21,6 +21,25 @@ Change log
 - Added compatibility with Python 2.
 - Extracted the post login redirect cookie setting into a new
   ``set_next_cookie`` decorator.
+- Dropped compatibility shims for Django<1.11.
+- Changed the ``EmailBackend`` to use ``_default_manager`` instead of
+  assuming that the default manager is called ``objects``.
+- Fixed an edge case bug where ``render_to_mail`` would crash when
+  encountering an empty text for the subject and body.
+- Enforced keyword-only usage of the views and functions in
+  ``authlib.views`` where it is appropriate.
+- Removed the default messages emitted when creating a new user and when
+  logging out.
+- Added a ``post_logout_response`` callable and argument to
+  ``authlib.views.logout`` to customize messages and redirects after
+  logging an user out.
+- Added a ``email_login`` callable and argument to the ``oauth2`` and
+  ``email_registration`` view to customize the creation, authentication
+  and login of users.
+- Changed the ``EmailRegistrationForm`` to save the request as
+  ``self.request``, not ``self._request``. Made use of this for moving
+  the email sending to the form class as well, further shortening the
+  view.
 
 
 `0.6`_ (2017-12-04)
