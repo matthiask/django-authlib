@@ -36,14 +36,20 @@ def render_to_mail(template, context, **kwargs):
         message = render_to_mail('myproject/hello_mail', {}, to=[email])
         message.send()
     """
-    lines = iter(render_to_string("%s.txt" % template, context).splitlines())
+    lines = iter(
+        line.rstrip()
+        for line in render_to_string("%s.txt" % template, context).splitlines()
+    )
 
     subject = ""
-    while True:
-        line = next(lines)
-        if line:
-            subject = line
-            break
+    try:
+        while True:
+            line = next(lines)
+            if line:
+                subject = line
+                break
+    except StopIteration:  # if lines is empty
+        pass
 
     body = "\n".join(lines).strip("\n")
     message = EmailMultiAlternatives(subject=subject, body=body, **kwargs)
