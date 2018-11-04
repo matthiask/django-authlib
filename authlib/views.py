@@ -48,11 +48,13 @@ def post_logout_response(request):
     return redirect("login")
 
 
-def _do_login(request, **kwargs):
-    user = auth.authenticate(request, **kwargs)
+def _do_login(request, email, **kwargs):
+    _u, created = auth.get_user_model()._default_manager.get_or_create(email=email)
+    user = auth.authenticate(request, email=email)
     if user and user.is_active:  # The is_active check is possibly redundant.
         auth.login(request, user)
-        return user
+        return user, created
+    return None, None
 
 
 @never_cache
@@ -79,21 +81,19 @@ def login(
 
 @never_cache
 def oauth2(request, client_class, post_login_response=post_login_response):
-    User = auth.get_user_model()
     client = client_class(request)
 
     if all(key not in request.GET for key in ("code", "oauth_token")):
         return redirect(client.get_authentication_url())
 
     user_data = client.get_user_data()
+    email = user_data.pop("email", None)
 
-    if user_data.get("email"):
-        email = user_data.pop("email")
-        new_user = User.objects.get_or_create(email=email, defaults=user_data)[1]
-        if not _do_login(request, email=email):
+    if email:
+        user, created = _do_login(request, email, user_data=user_data)
+        if not user:
             messages.error(request, _("No user with email address %s found.") % email)
-
-        return post_login_response(request, new_user=new_user)
+        return post_login_response(request, new_user=created)
 
     else:
         messages.error(request, _("Did not get an email address. Please try again."))
@@ -143,8 +143,6 @@ def email_registration(
     post_login_response=post_login_response,
     max_age=3600 * 3,
 ):
-    User = auth.get_user_model()
-
     if code is None:
         if request.method == "POST":
             form = registration_form(request.POST, request=request)
@@ -165,10 +163,8 @@ def email_registration(
             [messages.error(request, msg) for msg in exc.messages]
             return redirect("../")
 
-        new_user = User.objects.get_or_create(email=email)[1]
-        _do_login(request, email=email)
-
-        return post_login_response(request, new_user=new_user)
+        _u, created = _do_login(request, email)
+        return post_login_response(request, new_user=created)
 
 
 @never_cache
