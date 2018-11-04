@@ -151,6 +151,16 @@ exist, authentication (of course) fails::
         (r"^.*@example\.org$", lambda match: match[0]),
     ]
 
+If a pattern succeeds but no matching user with staff access is found
+processing continues with the next pattern. This means that you can
+authenticate users with their individual accounts (if they have one) and
+fall back to an account for everyone having a Google email address on
+your domain::
+
+    ADMIN_OAUTH_PATTERNS = [
+        (r"^.*@example\.org$", lambda match: match[0]),
+        (r"@example\.com$", "admin@example.com"),
+    ]
 
 Little Auth
 ===========
