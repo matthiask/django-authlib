@@ -64,48 +64,48 @@ writing ``django-authlib``'s Python code is less than 500 lines)::
 
     urlpatterns = [
         url(
-            r'^login/$',
+            r"^login/$",
             views.login,
-            name='login',
+            name="login",
         ),
         url(
-            r'^oauth/facebook/$',
+            r"^oauth/facebook/$",
             views.oauth2,
             {
-                'client_class': FacebookOAuth2Client,
+                "client_class": FacebookOAuth2Client,
             },
-            name='accounts_oauth_facebook',
+            name="accounts_oauth_facebook",
         ),
         url(
-            r'^oauth/google/$',
+            r"^oauth/google/$",
             views.oauth2,
             {
-                'client_class': GoogleOAuth2Client,
+                "client_class": GoogleOAuth2Client,
             },
-            name='accounts_oauth_google',
+            name="accounts_oauth_google",
         ),
         url(
-            r'^oauth/twitter/$',
+            r"^oauth/twitter/$",
             views.oauth2,
             {
-                'client_class': TwitterOAuthClient,
+                "client_class": TwitterOAuthClient,
             },
-            name='accounts_oauth_twitter',
+            name="accounts_oauth_twitter",
         ),
         url(
-            r'^email/$',
+            r"^email/$",
             views.email_registration,
-            name='email_registration',
+            name="email_registration",
         ),
         url(
-            r'^email/(?P<code>[^/]+)/$',
+            r"^email/(?P<code>[^/]+)/$",
             views.email_registration,
-            name='email_registration_confirm',
+            name="email_registration_confirm",
         ),
         url(
-            r'^logout/$',
+            r"^logout/$",
             views.logout,
-            name='logout',
+            name="logout",
         ),
     ]
 
@@ -129,13 +129,13 @@ Installation is as follows:
   account exists, authentication fails::
 
     ADMIN_OAUTH_PATTERNS = [
-        (r'@example\.com$', 'admin@example.com'),
+        (r"@example\.com$", "admin@example.com"),
     ]
 
 - Add an entry to your URLconf::
 
     urlpatterns = [
-        url(r'', include('authlib.admin_oauth.urls')),
+        url(r"", include("authlib.admin_oauth.urls")),
         # ...
     ]
 
@@ -148,7 +148,7 @@ the result of matching the regex. If a resulting email address does not
 exist, authentication (of course) fails::
 
     ADMIN_OAUTH_PATTERNS = [
-        (r'^.*@example\.org$', lambda match: match[0]),
+        (r"^.*@example\.org$", lambda match: match[0]),
     ]
 
 
@@ -162,5 +162,5 @@ model but still profit from authlib's authentication support.
 Usage is as follows:
 
 - Add ``authlib.little_auth`` to your ``INSTALLED_APPS``
-- Set ``AUTH_USER_MODEL = 'little_auth.User'``
+- Set ``AUTH_USER_MODEL = "little_auth.User"``
 - Optionally also follow any of the steps above.
