@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlunquote
 
-from authlib.email import get_signer, send_registration_mail
+from authlib.email import get_signer, render_to_mail, send_registration_mail
 from authlib.little_auth.models import User
 
 
@@ -113,3 +113,7 @@ class RegistrationTest(TestCase):
                 " registration request. Please try again."
             ],
         )
+
+    def test_empty_render_to_mail(self):
+        mail = render_to_mail("empty", {})
+        self.assertEqual(mail.subject, "")
