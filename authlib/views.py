@@ -13,6 +13,7 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from authlib.email import decode, send_registration_mail
+from authlib.utils import positional
 
 
 REDIRECT_COOKIE_NAME = "authlib-next"
@@ -38,6 +39,7 @@ def retrieve_next(request):
     return next if is_safe_url(url=next, **kw) else None
 
 
+@positional(1)
 def post_login_response(request, new_user):
     response = redirect(retrieve_next(request) or settings.LOGIN_REDIRECT_URL)
     response.delete_cookie(REDIRECT_COOKIE_NAME)
@@ -48,6 +50,7 @@ def post_logout_response(request):
     return redirect("login")
 
 
+@positional(1)
 def email_login(request, email, **kwargs):
     """
     Given a request, an email and optionally some additional data, ensure that
@@ -68,6 +71,7 @@ def email_login(request, email, **kwargs):
 @never_cache
 @sensitive_post_parameters()
 @set_next_cookie
+@positional(1)
 def login(
     request,
     template_name="registration/login.html",
@@ -88,6 +92,7 @@ def login(
 
 
 @never_cache
+@positional(1)
 def oauth2(
     request,
     client_class,
@@ -103,7 +108,7 @@ def oauth2(
     email = user_data.pop("email", None)
 
     if email:
-        user, created = email_login(request, email, user_data=user_data)
+        user, created = email_login(request, email=email, user_data=user_data)
         if not user:
             messages.error(request, _("No user with email address %s found.") % email)
         return post_login_response(request, new_user=created)
@@ -149,6 +154,7 @@ class EmailRegistrationForm(forms.Form):
 
 
 @never_cache
+@positional(1)
 def email_registration(
     request,
     code=None,
@@ -177,11 +183,12 @@ def email_registration(
             [messages.error(request, msg) for msg in exc.messages]
             return redirect("../")
 
-        _u, created = email_login(request, email)
+        _u, created = email_login(request, email=email)
         return post_login_response(request, new_user=created)
 
 
 @never_cache
+@positional(1)
 def logout(request, post_logout_response=post_logout_response):
     auth.logout(request)
     return post_logout_response(request)
