@@ -101,30 +101,34 @@ class EmailRegistrationForm(forms.Form):
     email = forms.EmailField(label=ugettext_lazy("email"))
 
     def __init__(self, *args, **kwargs):
-        self._request = kwargs.pop("request")
+        self.request = kwargs.pop("request")
         super(EmailRegistrationForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
         User = auth.get_user_model()
         email = self.cleaned_data.get("email")
         if email:
-            if (
-                self._request.user.is_authenticated
-                and email != self._request.user.email
-            ):
+            if self.request.user.is_authenticated and email != self.request.user.email:
                 raise forms.ValidationError(
                     _(
                         "The email you entered (%(input)s) does not match the"
                         " email of the account you're logged in as currently"
                         " (%(current)s)."
                     )
-                    % {"input": email, "current": self._request.user.email}
+                    % {"input": email, "current": self.request.user.email}
                 )
             if User.objects.filter(email=email, is_active=False).exists():
                 raise forms.ValidationError(
                     _("This email address belongs to an inactive account.")
                 )
         return email
+
+    def send_mail(self):
+        send_registration_mail(
+            self.cleaned_data["email"],
+            request=self.request,
+            user=self.request.user if self.request.user.is_authenticated else None,
+        )
 
 
 @never_cache
@@ -141,14 +145,7 @@ def email_registration(
         if request.method == "POST":
             form = registration_form(request.POST, request=request)
             if form.is_valid():
-                send_registration_mail(
-                    form.cleaned_data["email"],
-                    request=request,
-                    user=request.user
-                    if request.user.is_authenticated
-                    else None,  # noqa
-                )
-
+                form.send_mail()
                 messages.success(request, _("Please check your mailbox."))
                 return redirect(".")
 
