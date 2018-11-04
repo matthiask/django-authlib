@@ -44,6 +44,10 @@ def post_login_response(request, new_user):
     return response
 
 
+def post_logout_response(request):
+    return redirect("login")
+
+
 @never_cache
 @sensitive_post_parameters()
 @set_next_cookie
@@ -169,7 +173,6 @@ def email_registration(
 
 
 @never_cache
-def logout(request):
+def logout(request, post_logout_response=post_logout_response):
     auth.logout(request)
-    messages.success(request, _("You have been signed out."))
-    return redirect("login")
+    return post_logout_response(request)
