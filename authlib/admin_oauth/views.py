@@ -1,6 +1,5 @@
 import re
 
-from django import VERSION
 from django.conf import settings
 from django.contrib import auth, messages
 from django.shortcuts import redirect
@@ -13,14 +12,6 @@ from authlib.google import GoogleOAuth2Client
 
 REDIRECT_SESSION_KEY = "admin-oauth-next"
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
-
-
-if VERSION < (1, 11):
-    _orig_is_safe_url = is_safe_url
-
-    def is_safe_url(url, allowed_hosts):
-        host, = allowed_hosts
-        return _orig_is_safe_url(url=url, host=host)
 
 
 def retrieve_next(request):
