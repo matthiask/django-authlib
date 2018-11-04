@@ -1,21 +1,16 @@
 from django.contrib.auth import get_user_model
-
-
-def _by_email(email):
-    User = get_user_model()
-    try:
-        return User._default_manager.get(email=email, is_active=True)
-    except User.DoesNotExist:
-        pass
+from django.db.models import ObjectDoesNotExist
 
 
 class EmailBackend(object):
-    def get_user(self, user_id):
-        User = get_user_model()
+    def _get_user(self, **kwargs):
         try:
-            return User._default_manager.get(pk=user_id)
-        except User.DoesNotExist:
+            return get_user_model()._default_manager.get(is_active=True, **kwargs)
+        except ObjectDoesNotExist:
             return None
 
+    def get_user(self, user_id):
+        return self._get_user(pk=user_id)
+
     def authenticate(self, request, email):
-        return _by_email(email)
+        return self._get_user(email=email)

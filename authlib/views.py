@@ -50,7 +50,7 @@ def post_logout_response(request):
 
 def _do_login(request, **kwargs):
     user = auth.authenticate(request, **kwargs)
-    if user and user.is_active:
+    if user and user.is_active:  # The is_active check is possibly redundant.
         auth.login(request, user)
         return user
 
