@@ -88,7 +88,12 @@ def login(
 
 
 @never_cache
-def oauth2(request, client_class, post_login_response=post_login_response):
+def oauth2(
+    request,
+    client_class,
+    post_login_response=post_login_response,
+    email_login=email_login,
+):
     client = client_class(request)
 
     if all(key not in request.GET for key in ("code", "oauth_token")):
@@ -150,6 +155,7 @@ def email_registration(
     registration_form=EmailRegistrationForm,
     post_login_response=post_login_response,
     max_age=3600 * 3,
+    email_login=email_login,
 ):
     if code is None:
         if request.method == "POST":
