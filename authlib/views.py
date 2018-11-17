@@ -107,7 +107,9 @@ def oauth2(
         user, created = email_login(request, email=email, user_data=user_data)
         if user:
             return post_login_response(request, new_user=created)
-        messages.error(request, _("No user with email address %s found.") % email)
+        messages.error(
+            request, _("No active user with email address %s found.") % email
+        )
 
     else:
         messages.error(request, _("Did not get an email address. Please try again."))
@@ -123,7 +125,6 @@ class EmailRegistrationForm(forms.Form):
         super(EmailRegistrationForm, self).__init__(*args, **kwargs)
 
     def clean_email(self):
-        User = auth.get_user_model()
         email = self.cleaned_data.get("email")
         if email:
             if self.request.user.is_authenticated and email != self.request.user.email:
@@ -134,10 +135,6 @@ class EmailRegistrationForm(forms.Form):
                         " (%(current)s)."
                     )
                     % {"input": email, "current": self.request.user.email}
-                )
-            if User.objects.filter(email=email, is_active=False).exists():
-                raise forms.ValidationError(
-                    _("This email address belongs to an inactive account.")
                 )
         return email
 
@@ -178,7 +175,9 @@ def email_registration(
         user, created = email_login(request, email=email)
         if user:
             return post_login_response(request, new_user=created)
-        messages.error(request, _("No user with email address %s found.") % email)
+        messages.error(
+            request, _("No active user with email address %s found.") % email
+        )
         return redirect("login")
 
 

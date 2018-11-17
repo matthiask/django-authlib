@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+- Fixed a few problems around inactive users where authlib would either
+  handle them incorrectly or reveal that inactive users exist.
+
+
 `0.8`_ (2018-11-17)
 ===================
 
