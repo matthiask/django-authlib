@@ -38,6 +38,18 @@ class RegistrationTest(TestCase):
         response = client.post("/email/", {"email": "test2@example.com"})
         self.assertContains(response, "does not match the email of the account you")
 
+        # Set user to inactive
+        User.objects.all().update(is_active=False)
+        client = Client()
+        response = client.get(url)
+
+        response = client.get(url)
+        self.assertRedirects(response, "/login/", fetch_redirect_response=False)
+        response = client.get("/login/")
+        self.assertContains(
+            response, "No active user with email address test@example.com found."
+        )
+
     def test_existing_user(self):
         user = User.objects.create(email="test@example.com")
 
