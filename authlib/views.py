@@ -78,16 +78,12 @@ def login(
     authentication_form=AuthenticationForm,
     post_login_response=post_login_response,
 ):
-
-    if request.method == "POST":
-        form = authentication_form(request, data=request.POST)
-
-        if form.is_valid():
-            auth.login(request, form.get_user())
-            return post_login_response(request, new_user=False)
-    else:
-        form = authentication_form(request)
-
+    form = authentication_form(
+        request, data=request.POST if request.method == "POST" else None
+    )
+    if form.is_valid():
+        auth.login(request, form.get_user())
+        return post_login_response(request, new_user=False)
     return render(request, template_name, {"form": form})
 
 
@@ -163,16 +159,13 @@ def email_registration(
     email_login=email_login,
 ):
     if code is None:
-        if request.method == "POST":
-            form = registration_form(request.POST, request=request)
-            if form.is_valid():
-                form.send_mail()
-                messages.success(request, _("Please check your mailbox."))
-                return redirect(".")
-
-        else:
-            form = registration_form(request=request)
-
+        form = registration_form(
+            request.POST if request.method == "POST" else None, request=request
+        )
+        if form.is_valid():
+            form.send_mail()
+            messages.success(request, _("Please check your mailbox."))
+            return redirect(".")
         return render(request, "registration/email_registration.html", {"form": form})
 
     else:
