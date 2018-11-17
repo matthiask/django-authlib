@@ -1,7 +1,7 @@
 import re
 
 from django.core import mail
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
 from django.utils.http import urlunquote
@@ -16,11 +16,12 @@ def _messages(response):
 
 class RegistrationTest(TestCase):
     def test_registration(self):
-        response = self.client.get("/email/")
+        client = Client()
+        response = client.get("/email/")
 
-        response = self.client.post("/email/", {"email": "test@example.com"})
+        response = client.post("/email/", {"email": "test@example.com"})
         self.assertRedirects(response, "/email/")
-        response = self.client.get("/email/")
+        response = client.get("/email/")
         self.assertEqual(_messages(response), ["Please check your mailbox."])
 
         self.assertEqual(len(mail.outbox), 1)
@@ -31,8 +32,11 @@ class RegistrationTest(TestCase):
 
         self.assertTrue("http://testserver/email/test@example.com::" in url)
 
-        response = self.client.get(url)
+        response = client.get(url)
         self.assertRedirects(response, "/?login=1", fetch_redirect_response=False)
+
+        response = client.post("/email/", {"email": "test2@example.com"})
+        self.assertContains(response, "does not match the email of the account you")
 
     def test_existing_user(self):
         user = User.objects.create(email="test@example.com")

@@ -121,7 +121,7 @@ class EmailRegistrationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        if email:
+        if email:  # pragma: no branch
             if self.request.user.is_authenticated and email != self.request.user.email:
                 raise forms.ValidationError(
                     _(
