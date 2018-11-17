@@ -75,6 +75,18 @@ class Test(TestCase):
             response = client.get("/admin/__oauth__/?code=bla")
         self.assertRedirects(response, "/admin/login/")
 
+    def test_admin_oauth_no_data(self):
+        client = Client()
+        with mock_admin_oauth_client(
+            user_data={}, module=admin_oauth_views, client="GoogleOAuth2Client"
+        ):
+            response = client.get("/admin/__oauth__/?code=bla")
+
+        self.assertRedirects(response, "/admin/login/")
+
+        messages = [str(m) for m in response.wsgi_request._messages]
+        self.assertEqual(messages, ["Could not determine your email address."])
+
     def test_admin_oauth_match(self):
         User.objects.create_superuser("bla@example.org", "blabla")
 
