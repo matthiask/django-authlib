@@ -3,11 +3,10 @@ import re
 from django.core import mail
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlunquote
 
-from authlib.email import get_signer, render_to_mail, send_registration_mail
+from authlib.email import render_to_mail, send_registration_mail
 from authlib.little_auth.models import User
 
 
@@ -30,7 +29,7 @@ class RegistrationTest(TestCase):
             [line for line in body.splitlines() if "testserver" in line][0]
         )
 
-        self.assertTrue("http://testserver/email/test@example.com:::" in url)
+        self.assertTrue("http://testserver/email/test@example.com::" in url)
 
         response = self.client.get(url)
         self.assertRedirects(response, "/?login=1", fetch_redirect_response=False)
@@ -39,7 +38,7 @@ class RegistrationTest(TestCase):
         user = User.objects.create(email="test@example.com")
 
         request = RequestFactory().get("/")
-        send_registration_mail("test@example.com", request=request, user=user)
+        send_registration_mail("test@example.com", request=request)
 
         self.assertEqual(len(mail.outbox), 1)
         body = mail.outbox[0].body
@@ -47,9 +46,7 @@ class RegistrationTest(TestCase):
             [line for line in body.splitlines() if "testserver" in line][0]
         )
 
-        self.assertTrue(
-            re.match(r"http://testserver/email/test@example.com:\d+:\w+:", url)
-        )
+        self.assertTrue(re.match(r"http://testserver/email/test@example.com::", url))
 
         response = self.client.get(url)
 
@@ -60,15 +57,6 @@ class RegistrationTest(TestCase):
 
         user.last_login = timezone.now()
         user.save()
-
-        response = self.client.get(url, follow=True)
-        self.assertEqual(_messages(response), ["The link has already been used."])
-        self.assertRedirects(response, "../")
-
-        response = self.client.get(
-            url.replace("/email/", "/email-quick/", 1), follow=True
-        )
-        self.assertEqual(_messages(response), ["The link has already been used."])
 
         response = self.client.get(url.replace("com:", "ch:", 1), follow=True)
         self.assertEqual(
@@ -85,35 +73,26 @@ class RegistrationTest(TestCase):
             _messages(response),
             [
                 "Unable to verify the signature. Please request a new"
-                " registration link.",
-                "Something went wrong while decoding the"
-                " registration request. Please try again.",
-            ],
-        )
-
-    def test_crap(self):
-        user = User.objects.create_user("test@example.com", "pass")
-
-        code = [
-            user.email,
-            str(user.id),
-            # Intentionally forget the timestamp.
-        ]
-
-        url = reverse(
-            "email_registration_confirm",
-            kwargs={"code": get_signer().sign(u":".join(code))},
-        )
-
-        response = self.client.get(url, follow=True)
-        self.assertEqual(
-            _messages(response),
-            [
-                "Something went wrong while decoding the"
-                " registration request. Please try again."
+                " registration link."
             ],
         )
 
     def test_empty_render_to_mail(self):
         mail = render_to_mail("empty", {})
         self.assertEqual(mail.subject, "")
+
+    def test_payload(self):
+        # TODO Add a payload with ":" chars etc. in it, and look it it
+        # arrives again.
+        self.client.post("/custom/", {"email": "test42@example.com"})
+
+        self.assertEqual(len(mail.outbox), 1)
+        body = mail.outbox[0].body
+        url = urlunquote(
+            [line for line in body.splitlines() if "testserver" in line][0]
+        )
+
+        response = self.client.get(url)
+        self.assertEqual(
+            response.content, b"email:test42@example.com payload:hello:world:42"
+        )

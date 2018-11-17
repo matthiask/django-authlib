@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import TemplateDoesNotExist, render_to_string
 from django.urls import reverse
-from django.utils.http import int_to_base36
 from django.utils.translation import ugettext as _
 
 from authlib.utils import positional
@@ -72,50 +71,33 @@ def get_signer(salt="email_registration"):
     return signing.TimestampSigner(salt=salt)
 
 
-def get_last_login_timestamp(user):
-    """
-    Django 1.7 allows the `last_login` timestamp to be `None` for new users.
-    """
-    return int(user.last_login.strftime("%s")) if user.last_login else 0
-
-
 @positional(2)
-def get_confirmation_code(email, request, user=None):
-    """get_confirmation_code(email, request, *, user=None)
+def get_confirmation_code(email, request, payload=""):
+    """get_confirmation_code(email, request, *, payload="")
     Returns the code for the confirmation URL
     """
-    code = [email, "", ""]
-    if user:
-        code[1] = str(user.id)
-        code[2] = int_to_base36(get_last_login_timestamp(user))
-    return get_signer().sign(":".join(code))
+    return get_signer().sign(":".join([email, payload]))
 
 
-def get_confirmation_url(email, request, user=None, name="email_registration_confirm"):
+def get_confirmation_url(email, request, name="email_registration_confirm", **kwargs):
     """
     Returns the confirmation URL
     """
-    code = [email, "", ""]
-    if user:
-        code[1] = str(user.id)
-        code[2] = int_to_base36(get_last_login_timestamp(user))
-
     return request.build_absolute_uri(
-        reverse(name, kwargs={"code": get_confirmation_code(email, request, user=user)})
+        reverse(name, kwargs={"code": get_confirmation_code(email, request, **kwargs)})
     )
 
 
 @positional(1)
-def send_registration_mail(email, request, user=None):
-    """send_registration_mail(email, *, request, user=None)
+def send_registration_mail(email, request, **kwargs):
+    """send_registration_mail(email, *, request, **kwargs)
     Sends the registration mail
 
     * ``email``: The email address where the registration link should be
       sent to.
     * ``request``: A HTTP request instance, used to construct the complete
       URL (including protocol and domain) for the registration link.
-    * ``user``: Optional user instance. If the user exists already and you
-      just want to send a link where the user can choose his/her password.
+    * Additional keyword arguments for ``get_confirmation_url``.
 
     The mail is rendered using the following two templates:
 
@@ -129,7 +111,7 @@ def send_registration_mail(email, request, user=None):
 
     render_to_mail(
         "registration/email_registration_email",
-        {"url": get_confirmation_url(email, request, user=user)},
+        {"url": get_confirmation_url(email, request, **kwargs)},
         to=[email],
     ).send()
 
@@ -163,35 +145,4 @@ def decode(code, max_age):
             code="email_registration_signature",
         )
 
-    parts = data.split(":")
-    if len(parts) != 3:
-        raise ValidationError(
-            _(
-                "Something went wrong while decoding the"
-                " registration request. Please try again."
-            ),
-            code="email_registration_broken",
-        )
-
-    email, uid, timestamp = parts
-    if uid and timestamp:
-        try:
-            user = User.objects.get(pk=uid)
-        except (User.DoesNotExist, TypeError, ValueError):
-            raise ValidationError(
-                _(
-                    "Something went wrong while decoding the"
-                    " registration request. Please try again."
-                ),
-                code="email_registration_invalid_uid",
-            )
-
-        if timestamp != int_to_base36(get_last_login_timestamp(user)):
-            raise ValidationError(
-                _("The link has already been used."), code="email_registration_used"
-            )
-
-    else:
-        user = None
-
-    return email, user
+    return data.split(":", 1)

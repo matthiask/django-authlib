@@ -7,6 +7,8 @@ from authlib.facebook import FacebookOAuth2Client
 from authlib.google import GoogleOAuth2Client
 from authlib.twitter import TwitterOAuthClient
 
+from testapp.views import custom_verification, custom_verification_code
+
 
 urlpatterns = [
     url(r"", include("authlib.admin_oauth.urls")),
@@ -38,4 +40,10 @@ urlpatterns = [
         name="email_registration_confirm",
     ),
     url(r"^logout/$", views.logout, name="logout"),
+    url(r"^custom/$", custom_verification),
+    url(
+        r"^custom/(?P<code>[^/]+)/$",
+        custom_verification_code,
+        name="custom_verification_code",
+    ),
 ]

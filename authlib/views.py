@@ -145,11 +145,10 @@ class EmailRegistrationForm(forms.Form):
                 )
         return email
 
-    def send_mail(self):
+    @positional(1)
+    def send_mail(self, **kwargs):
         send_registration_mail(
-            self.cleaned_data["email"],
-            request=self.request,
-            user=self.request.user if self.request.user.is_authenticated else None,
+            self.cleaned_data["email"], request=self.request, **kwargs
         )
 
 
@@ -178,7 +177,7 @@ def email_registration(
 
     else:
         try:
-            email, _user = decode(code, max_age=max_age)
+            email, payload = decode(code, max_age=max_age)
         except ValidationError as exc:
             [messages.error(request, msg) for msg in exc.messages]
             return redirect("../")
