@@ -75,6 +75,8 @@ def get_signer(salt="email_registration"):
 def get_confirmation_code(email, request, payload=""):
     """get_confirmation_code(email, request, *, payload="")
     Returns the code for the confirmation URL
+
+    The payload should be a string already.
     """
     return get_signer().sign(":".join([email, payload]))
 
@@ -97,7 +99,8 @@ def send_registration_mail(email, request, **kwargs):
       sent to.
     * ``request``: A HTTP request instance, used to construct the complete
       URL (including protocol and domain) for the registration link.
-    * Additional keyword arguments for ``get_confirmation_url``.
+    * Additional keyword arguments for ``get_confirmation_url`` respectively
+      ``get_confirmation_code``.
 
     The mail is rendered using the following two templates:
 
@@ -120,13 +123,13 @@ def send_registration_mail(email, request, **kwargs):
 def decode(code, max_age):
     """decode(code, *, max_age)
     Decodes the code from the registration link and returns a tuple consisting
-    of the verified email address and the associated user instance or ``None``
-    if no user was passed to ``send_registration_mail``
+    of the verified email address and the payload which was passed through to
+    ``get_confirmation_code``.
 
-    Pass the maximum age in seconds of the link as ``max_age``.
+    The maximum age in seconds of the link has to be specified as ``max_age``.
 
-    This method raises ``ValidationError`` exceptions containing an translated
-    message what went wrong suitable for presenting directly to the user.
+    This method raises ``ValidationError`` exceptions when anything goes wrong
+    when verifying the signature or the expiry timeout.
     """
     try:
         data = get_signer().unsign(code, max_age=max_age)

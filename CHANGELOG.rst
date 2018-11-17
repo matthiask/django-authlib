@@ -5,6 +5,19 @@ Change log
 `Next version`_
 ===============
 
+`0.8`_ (2018-11-17)
+===================
+
+- **BACKWARDS INCOMPATIBLE** Replaced the email registration
+  functionality of referencing users with arbitrary payloads. This
+  allows not only verifying the email address but also additional data
+  which may or may not be related to the user in question. On the other
+  hand the comparison of ``last_login`` timestamps is gone, which means
+  that links may be reused as long as less than ``max_age`` seconds have
+  passed. This makes it even more important to keep ``max_age`` small.
+  The change mostly affects the functions in ``authlib.email``.
+
+
 `0.7`_ (2018-11-04)
 ===================
 
@@ -119,4 +132,5 @@ Change log
 .. _0.5: https://github.com/matthiask/django-authlib/compare/0.4...0.5
 .. _0.6: https://github.com/matthiask/django-authlib/compare/0.5...0.6
 .. _0.7: https://github.com/matthiask/django-authlib/compare/0.6...0.7
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.7...master
+.. _0.8: https://github.com/matthiask/django-authlib/compare/0.7...0.8
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.8...master
