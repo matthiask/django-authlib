@@ -109,9 +109,9 @@ def oauth2(
 
     if email:
         user, created = email_login(request, email=email, user_data=user_data)
-        if not user:
-            messages.error(request, _("No user with email address %s found.") % email)
-        return post_login_response(request, new_user=created)
+        if user:
+            return post_login_response(request, new_user=created)
+        messages.error(request, _("No user with email address %s found.") % email)
 
     else:
         messages.error(request, _("Did not get an email address. Please try again."))
@@ -182,8 +182,11 @@ def email_registration(
             [messages.error(request, msg) for msg in exc.messages]
             return redirect("../")
 
-        _u, created = email_login(request, email=email)
-        return post_login_response(request, new_user=created)
+        user, created = email_login(request, email=email)
+        if user:
+            return post_login_response(request, new_user=created)
+        messages.error(request, _("No user with email address %s found.") % email)
+        return redirect("login")
 
 
 @never_cache
