@@ -22,7 +22,7 @@ matrix:
       env: REQ="https://github.com/django/django/archive/master.zip#egg=Django"
 install:
 - pip install -U pip wheel
-- pip install requests-oauthlib
+- pip install requests-mock requests-oauthlib
 - pip install $REQ
 - python setup.py install
 script: cd tests && ./manage.py test testapp && cd ..

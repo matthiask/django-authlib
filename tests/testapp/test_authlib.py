@@ -1,29 +1,21 @@
+import requests_mock
 from contextlib import contextmanager
 
 from django.test import Client, TestCase
 from django.utils.translation import deactivate_all
 
-from authlib.admin_oauth import views as admin_oauth_views
 from authlib.facebook import FacebookOAuth2Client
 from authlib.little_auth.models import User
 
 
-def mock_admin_oauth_client(user_data, module, client):
-    class mock(object):
-        def __init__(self, request):
-            pass
-
-        def get_user_data(self):
-            return user_data
-
-    @contextmanager
-    def manager():
-        orig = getattr(module, client)
-        setattr(module, client, mock)
+@contextmanager
+def google_oauth_data(data):
+    with requests_mock.Mocker() as m:
+        m.post(
+            "https://www.googleapis.com/oauth2/v4/token", json={"access_token": "123"}
+        )
+        m.get("https://www.googleapis.com/oauth2/v3/userinfo", json=data)
         yield
-        setattr(module, client, orig)
-
-    return manager()
 
 
 class Test(TestCase):
@@ -56,30 +48,20 @@ class Test(TestCase):
         )
         self.assertEqual(client.session["admin-oauth-next"], "/admin/little_auth/")
 
-        with mock_admin_oauth_client(
-            user_data={"email": "blaaa@example.com"},
-            module=admin_oauth_views,
-            client="GoogleOAuth2Client",
-        ):
+        with google_oauth_data({"email": "blaaa@example.com", "email_verified": True}):
             response = client.get("/admin/__oauth__/?code=bla")
         self.assertRedirects(response, "/admin/little_auth/")
 
         self.assertEqual(client.get("/admin/little_auth/").status_code, 200)
 
         client = Client()
-        with mock_admin_oauth_client(
-            user_data={"email": "blaaa@invalid.tld"},
-            module=admin_oauth_views,
-            client="GoogleOAuth2Client",
-        ):
+        with google_oauth_data({"email": "blaaa@invalid.tld", "email_verified": True}):
             response = client.get("/admin/__oauth__/?code=bla")
         self.assertRedirects(response, "/admin/login/")
 
     def test_admin_oauth_no_data(self):
         client = Client()
-        with mock_admin_oauth_client(
-            user_data={}, module=admin_oauth_views, client="GoogleOAuth2Client"
-        ):
+        with google_oauth_data({}):
             response = client.get("/admin/__oauth__/?code=bla")
 
         self.assertRedirects(response, "/admin/login/")
@@ -91,11 +73,7 @@ class Test(TestCase):
         User.objects.create_superuser("bla@example.org", "blabla")
 
         client = Client()
-        with mock_admin_oauth_client(
-            user_data={"email": "bla@example.org"},
-            module=admin_oauth_views,
-            client="GoogleOAuth2Client",
-        ):
+        with google_oauth_data({"email": "bla@example.org", "email_verified": True}):
             response = client.get("/admin/__oauth__/?code=bla")
         self.assertRedirects(response, "/admin/")
 
@@ -106,11 +84,7 @@ class Test(TestCase):
         User.objects.create_superuser("bla@example.org", "blabla")
 
         client = Client()
-        with mock_admin_oauth_client(
-            user_data={"email": "blaa@example.org"},
-            module=admin_oauth_views,
-            client="GoogleOAuth2Client",
-        ):
+        with google_oauth_data({"email": "blaa@example.org", "email_verified": True}):
             response = client.get("/admin/__oauth__/?code=bla")
 
         # We are not authenticated

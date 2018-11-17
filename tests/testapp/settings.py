@@ -1,6 +1,7 @@
 import os
 import warnings
 
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 
