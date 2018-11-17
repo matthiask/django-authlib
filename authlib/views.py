@@ -74,7 +74,7 @@ def login(
     post_login_response=post_login_response,
 ):
     form = authentication_form(
-        request, data=request.POST if request.method == "POST" else None
+        data=request.POST if request.method == "POST" else None, request=request
     )
     if form.is_valid():
         auth.login(request, form.get_user())
