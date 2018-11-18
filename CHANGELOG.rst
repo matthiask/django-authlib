@@ -7,6 +7,16 @@ Change log
 
 - Fixed a few problems around inactive users where authlib would either
   handle them incorrectly or reveal that inactive users exist.
+- Added many unittests, raised the code coverage to 100% (except for the
+  uncovered Facebook and Twitter OAuth clients). Switched to mocking
+  requests and responses instead of simply replacing the
+  ``GoogleOAuth2Client`` for testing.
+- Moved the ``BaseUser`` and ``BaseUserManager`` to
+  ``authlib.base_user`` for consistency with
+  ``django.contrib.auth.base_user``.
+- Dropped the useless ``OAuthClient`` base class.
+- Removed compatibility code for Django<1.11 when verifying whether a
+  redirection URL is safe.
 
 
 `0.8`_ (2018-11-17)
