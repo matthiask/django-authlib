@@ -64,7 +64,6 @@ class Test(TestCase):
             "&client_id=empty&redirect_uri=",
             response["Location"],
         )
-        self.assertEqual(client.session["admin-oauth-next"], "/admin/little_auth/")
 
         with google_oauth_data({"email": "blaaa@example.com", "email_verified": True}):
             response = client.get("/admin/__oauth__/?code=bla")

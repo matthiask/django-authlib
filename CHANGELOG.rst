@@ -19,6 +19,8 @@ Change log
   redirection URL is safe.
 - Changed the ``retrieve_next`` implementations to only consider HTTPS
   URLs as safe when processing HTTPS requests.
+- Changed the admin OAuth functionality to also use the cookies code
+  from ``authlib.views`` for redirecting users after authentication.
 
 
 `0.8`_ (2018-11-17)
