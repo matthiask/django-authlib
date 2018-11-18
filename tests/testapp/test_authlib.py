@@ -5,6 +5,7 @@ from django.test import Client, TestCase
 from django.utils.six.moves.urllib.parse import urlparse, parse_qsl
 from django.utils.translation import deactivate_all
 
+from authlib.base import BaseUser
 from authlib.facebook import FacebookOAuth2Client
 from authlib.little_auth.models import User
 
@@ -30,6 +31,20 @@ class Test(TestCase):
     def setUp(self):
         deactivate_all()
         self.user = User.objects.create_superuser("admin@example.com", "blabla")
+
+    def test_manager(self):
+        with self.assertRaises(TypeError):
+            User.objects.create_user()
+        with self.assertRaises(ValueError):
+            User.objects.create_user(None)
+        with self.assertRaises(ValueError):
+            User.objects.create_user("")
+
+    def test_user(self):
+        user = BaseUser(email="test@example.com")
+        self.assertEqual("{}".format(user), "test@example.com")
+        self.assertEqual(user.get_full_name(), "test@example.com")
+        self.assertEqual(user.get_short_name(), "test@example.com")
 
     def test_admin_oauth(self):
         client = Client()

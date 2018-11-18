@@ -5,13 +5,13 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class OAuthClient(object):
-    def __init__(self, request):
+    def __init__(self, request):  # pragma: no cover
         self._request = request
 
-    def get_authentication_url(self):
+    def get_authentication_url(self):  # pragma: no cover
         pass
 
-    def get_user_data(self):
+    def get_user_data(self):  # pragma: no cover
         pass
 
 
@@ -20,8 +20,7 @@ class BaseUserManager(auth_models.BaseUserManager):
         if not email:
             raise ValueError("Email missing")
         user = self.model(email=self.normalize_email(email))
-        if password:
-            user.set_password(password)
+        user.set_password(password)
         user.save(using=self._db)
         return user
 
