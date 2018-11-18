@@ -1,5 +1,4 @@
 import os
-import warnings
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
@@ -57,14 +56,6 @@ MIDDLEWARE_CLASSES = MIDDLEWARE = [
 ]
 # Do not warn about MIDDLEWARE_CLASSES
 SILENCED_SYSTEM_CHECKS = ["1_10.W001"]
-
-try:
-    # We do not yet care about those.
-    from django.utils.deprecation import RemovedInDjango21Warning
-
-    warnings.simplefilter("ignore", RemovedInDjango21Warning)
-except ImportError:  # pragma: no cover
-    pass
 
 AUTH_USER_MODEL = "little_auth.User"
 AUTHENTICATION_BACKENDS = (
