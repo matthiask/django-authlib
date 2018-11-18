@@ -128,7 +128,7 @@ class RegistrationTest(TestCase):
         code = get_confirmation_code("test@example.com", request)
         self.assertTrue(code.startswith("test@example.com::"))
 
-        self.assertEqual(decode(code, max_age=1), ["test@example.com", ""])
+        self.assertEqual(decode(code, max_age=5), ["test@example.com", ""])
 
         with self.assertRaises(ValidationError) as cm:
             time.sleep(2)
