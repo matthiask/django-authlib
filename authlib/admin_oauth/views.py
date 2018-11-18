@@ -22,7 +22,7 @@ def admin_oauth(request):
         return redirect(client.get_authentication_url())
 
     user_data = client.get_user_data()
-    email = user_data.get("email", "")
+    email = user_data.get("email")
 
     if email:
         for pattern, user_mail in ADMIN_OAUTH_PATTERNS:
