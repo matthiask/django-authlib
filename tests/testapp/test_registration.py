@@ -1,12 +1,19 @@
 import re
+import time
 
 from django.core import mail
+from django.core.exceptions import ValidationError
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
 from django.utils.http import urlunquote
 
-from authlib.email import render_to_mail, send_registration_mail
+from authlib.email import (
+    get_confirmation_code,
+    decode,
+    render_to_mail,
+    send_registration_mail,
+)
 from authlib.little_auth.models import User
 
 
@@ -114,4 +121,20 @@ class RegistrationTest(TestCase):
         response = self.client.get(url)
         self.assertEqual(
             response.content, b"email:test42@example.com payload:hello:world:42"
+        )
+
+    def test_expiry(self):
+        request = RequestFactory().get("/")
+        code = get_confirmation_code("test@example.com", request)
+        self.assertTrue(code.startswith("test@example.com::"))
+
+        self.assertEqual(decode(code, max_age=1), ["test@example.com", ""])
+
+        with self.assertRaises(ValidationError) as cm:
+            time.sleep(2)
+            decode(code, max_age=1)
+
+        self.assertEqual(
+            cm.exception.messages,
+            ["The link is expired. Please request another registration link."],
         )
