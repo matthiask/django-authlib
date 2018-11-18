@@ -73,10 +73,8 @@ class Test(TestCase):
         self.assertEqual(messages, ["Could not determine your email address."])
 
     def test_admin_oauth_match(self):
-        User.objects.create_superuser("bla@example.org", "blabla")
-
         client = Client()
-        with google_oauth_data({"email": "bla@example.org", "email_verified": True}):
+        with google_oauth_data({"email": "admin@example.com", "email_verified": True}):
             response = client.get("/admin/__oauth__/?code=bla")
         self.assertRedirects(response, "/admin/")
 
@@ -84,10 +82,8 @@ class Test(TestCase):
         self.assertEqual(client.get("/admin/little_auth/").status_code, 200)
 
     def test_admin_oauth_nomatch(self):
-        User.objects.create_superuser("bla@example.org", "blabla")
-
         client = Client()
-        with google_oauth_data({"email": "blaa@example.org", "email_verified": True}):
+        with google_oauth_data({"email": "bla@example.org", "email_verified": True}):
             response = client.get("/admin/__oauth__/?code=bla")
 
         # We are not authenticated
@@ -95,7 +91,7 @@ class Test(TestCase):
 
         messages = [str(m) for m in response.wsgi_request._messages]
         self.assertEqual(
-            messages, ["No matching staff users for email address 'blaa@example.org'"]
+            messages, ["No matching staff users for email address 'bla@example.org'"]
         )
 
     def test_authlib(self):
