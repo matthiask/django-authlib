@@ -124,6 +124,13 @@ class Test(TestCase):
         self.assertEqual(user.get_full_name(), "jus***@***.com")
         self.assertEqual(str(user), "jus***@***.com")
 
+    def test_login(self):
+        client = Client()
+        response = client.post(
+            "/login/", {"username": "admin@example.com", "password": "blabla"}
+        )
+        self.assertRedirects(response, "/?login=1", fetch_redirect_response=False)
+
 
 class OAuth2Test(TestCase):
     def test_oauth2_authorization_redirect(self):
