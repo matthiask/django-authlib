@@ -2,6 +2,7 @@ import requests_mock
 from contextlib import contextmanager
 
 from django.test import Client, TestCase
+from django.utils.six.moves.urllib.parse import urlparse, parse_qsl
 from django.utils.translation import deactivate_all
 
 from authlib.facebook import FacebookOAuth2Client
@@ -18,15 +19,17 @@ def google_oauth_data(data):
         yield
 
 
+@contextmanager
+def google_oauth_authentication_url():
+    with requests_mock.Mocker() as m:
+        m.get("https://accounts.google.com/o/oauth2/v2/auth", {})
+        yield
+
+
 class Test(TestCase):
     def setUp(self):
-        self.user = User.objects.create_superuser("admin@example.com", "blabla")
         deactivate_all()
-
-    def login(self):
-        client = Client()
-        client.force_login(self.user)
-        return client
+        self.user = User.objects.create_superuser("admin@example.com", "blabla")
 
     def test_admin_oauth(self):
         client = Client()
@@ -124,3 +127,48 @@ class Test(TestCase):
         user = User(email="just-testing@example.com")
         self.assertEqual(user.get_full_name(), "jus***@***.com")
         self.assertEqual(str(user), "jus***@***.com")
+
+
+class OAuth2Test(TestCase):
+    def test_oauth2_authorization_redirect(self):
+        client = Client()
+
+        response = client.get("/oauth/google/")
+        self.assertEqual(response.status_code, 302)
+        url = urlparse(response["Location"])
+        params = dict(parse_qsl(url.query))
+        self.assertEqual(params["response_type"], "code")
+        self.assertEqual(params["redirect_uri"], "http://testserver/oauth/google/")
+        self.assertEqual(params["scope"], "openid email profile")
+
+    def test_oauth2_no_data(self):
+        client = Client()
+
+        with google_oauth_data({}):
+            response = client.get("/oauth/google/?code=bla")
+        self.assertRedirects(response, "/login/", fetch_redirect_response=False)
+        messages = [str(m) for m in response.wsgi_request._messages]
+        self.assertEqual(messages, ["Did not get an email address. Please try again."])
+
+    def test_oauth2_success(self):
+        client = Client()
+
+        with google_oauth_data({"email": "test3@example.com", "email_verified": True}):
+            response = client.get("/oauth/google/?code=bla")
+        self.assertRedirects(response, "/?login=1", fetch_redirect_response=False)
+        messages = [str(m) for m in response.wsgi_request._messages]
+        self.assertEqual(messages, [])
+
+        self.assertEqual(User.objects.get().email, "test3@example.com")
+
+    def test_oauth2_inactive(self):
+        User.objects.create(email="test4@example.com", is_active=False)
+        client = Client()
+
+        with google_oauth_data({"email": "test4@example.com", "email_verified": True}):
+            response = client.get("/oauth/google/?code=bla")
+        self.assertRedirects(response, "/login/", fetch_redirect_response=False)
+        messages = [str(m) for m in response.wsgi_request._messages]
+        self.assertEqual(
+            messages, ["No active user with email address test4@example.com found."]
+        )

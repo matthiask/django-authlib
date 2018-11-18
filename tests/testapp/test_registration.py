@@ -38,6 +38,9 @@ class RegistrationTest(TestCase):
         response = client.post("/email/", {"email": "test2@example.com"})
         self.assertContains(response, "does not match the email of the account you")
 
+        response = client.get("/logout/")
+        self.assertRedirects(response, "/login/")  # The default.
+
         # Set user to inactive
         User.objects.all().update(is_active=False)
         client = Client()
