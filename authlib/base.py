@@ -5,14 +5,14 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class OAuthClient(object):
-    def __init__(self, request):  # pragma: no cover
-        self._request = request
+    def __init__(self, request):
+        raise NotImplementedError
 
-    def get_authentication_url(self):  # pragma: no cover
-        pass
+    def get_authentication_url(self):
+        raise NotImplementedError
 
-    def get_user_data(self):  # pragma: no cover
-        pass
+    def get_user_data(self):
+        raise NotImplementedError
 
 
 class BaseUserManager(auth_models.BaseUserManager):
