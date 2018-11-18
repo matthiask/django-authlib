@@ -4,17 +4,6 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
-class OAuthClient(object):
-    def __init__(self, request):
-        raise NotImplementedError
-
-    def get_authentication_url(self):
-        raise NotImplementedError
-
-    def get_user_data(self):
-        raise NotImplementedError
-
-
 class BaseUserManager(auth_models.BaseUserManager):
     def create_user(self, email, password=None):
         if not email:

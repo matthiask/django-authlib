@@ -4,10 +4,8 @@ from django.conf import settings
 
 from requests_oauthlib import OAuth2Session
 
-from .base import OAuthClient
 
-
-class GoogleOAuth2Client(OAuthClient):
+class GoogleOAuth2Client(object):
     authorization_base_url = "https://accounts.google.com/o/oauth2/v2/auth"
     token_url = "https://www.googleapis.com/oauth2/v4/token"
     scope = ["openid", "email", "profile"]

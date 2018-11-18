@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from authlib.base import BaseUser
+from authlib.base_user import BaseUser
 
 
 def _obfuscate(email):

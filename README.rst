@@ -28,7 +28,7 @@ Usage
   required database tables or anything of the sort.
 - Have a user model which has a email field named ``email`` as username.
   For convenience a base user model and manager are available in the
-  ``authlib.base`` module, ``BaseUser`` and ``BaseUserManager``.
+  ``authlib.base_user`` module, ``BaseUser`` and ``BaseUserManager``.
   The ``BaseUserManager`` is automatically available as ``objects`` when
   you extend the ``BaseUser``.
 - Use the bundled views or write your own. The bundled views give

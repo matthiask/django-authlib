@@ -3,10 +3,8 @@ from django.core.cache import cache
 
 from requests_oauthlib import OAuth1Session
 
-from .base import OAuthClient
 
-
-class TwitterOAuthClient(OAuthClient):
+class TwitterOAuthClient(object):
     authorization_base_url = "https://api.twitter.com/oauth/authenticate"
     client_id = settings.TWITTER_CLIENT_ID
     client_secret = settings.TWITTER_CLIENT_SECRET
