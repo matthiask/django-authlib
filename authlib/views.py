@@ -31,7 +31,15 @@ def set_next_cookie(view):
 
 def retrieve_next(request):
     next = request.COOKIES.get(REDIRECT_COOKIE_NAME)
-    return next if is_safe_url(url=next, allowed_hosts={request.get_host()}) else None
+    return (
+        next
+        if is_safe_url(
+            url=next,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        )
+        else None
+    )
 
 
 @positional(1)

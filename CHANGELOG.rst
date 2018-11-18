@@ -17,6 +17,8 @@ Change log
 - Dropped the useless ``OAuthClient`` base class.
 - Removed compatibility code for Django<1.11 when verifying whether a
   redirection URL is safe.
+- Changed the ``retrieve_next`` implementations to only consider HTTPS
+  URLs as safe when processing HTTPS requests.
 
 
 `0.8`_ (2018-11-17)

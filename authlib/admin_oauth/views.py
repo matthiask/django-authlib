@@ -16,7 +16,15 @@ ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 
 def retrieve_next(request):
     next = request.session.pop(REDIRECT_SESSION_KEY, None)
-    return next if is_safe_url(url=next, allowed_hosts=[request.get_host()]) else None
+    return (
+        next
+        if is_safe_url(
+            url=next,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        )
+        else None
+    )
 
 
 @never_cache
