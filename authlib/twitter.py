@@ -35,7 +35,7 @@ class TwitterOAuthClient(object):
         if not oa_token:
             return {}
 
-        resource_owner = cache.get(oa_token)
+        resource_owner = cache.get("oa-token-%s" % oa_token)
         if not resource_owner:
             return {}
 
