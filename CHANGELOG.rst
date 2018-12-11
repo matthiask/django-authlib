@@ -21,6 +21,8 @@ Change log
   URLs as safe when processing HTTPS requests.
 - Changed the admin OAuth functionality to also use the cookies code
   from ``authlib.views`` for redirecting users after authentication.
+- Fixed a possible crash in the Twitter OAuth flow when the token from
+  the authentication redirect cannot be determined anymore.
 
 
 `0.8`_ (2018-11-17)

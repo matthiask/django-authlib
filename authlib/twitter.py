@@ -31,9 +31,11 @@ class TwitterOAuthClient(object):
         )
         verifier = oauth_response.get("oauth_verifier")
 
-        resource_owner = cache.get(
-            "oa-token-%s" % self._request.session.pop("oa_token")
-        )
+        oa_token = self._request.session.pop("oa_token", None)
+        if not oa_token:
+            return {}
+
+        resource_owner = cache.get(oa_token)
 
         oauth = OAuth1Session(
             self.client_id,
