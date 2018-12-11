@@ -36,6 +36,8 @@ class TwitterOAuthClient(object):
             return {}
 
         resource_owner = cache.get(oa_token)
+        if not resource_owner:
+            return {}
 
         oauth = OAuth1Session(
             self.client_id,
