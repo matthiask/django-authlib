@@ -18,6 +18,13 @@ authentication when the password can be easily resetted on most websites
 when an attacker has access to the email address?
 
 
+Goals
+=====
+
+- Stay small, simple and extensible.
+- Offer tools and utilities instead of imposing a framework on you.
+
+
 Usage
 =====
 
