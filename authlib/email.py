@@ -6,8 +6,6 @@ from django.template.loader import TemplateDoesNotExist, render_to_string
 from django.urls import reverse
 from django.utils.translation import ugettext as _
 
-from authlib.utils import positional
-
 
 # Assumes that this is a model with an unique `email` field.
 User = get_user_model()
@@ -71,8 +69,7 @@ def get_signer(salt="email_registration"):
     return signing.TimestampSigner(salt=salt)
 
 
-@positional(2)
-def get_confirmation_code(email, request, payload=""):
+def get_confirmation_code(email, request, *, payload=""):
     """get_confirmation_code(email, request, *, payload="")
     Returns the code for the confirmation URL
 
@@ -90,8 +87,7 @@ def get_confirmation_url(email, request, name="email_registration_confirm", **kw
     )
 
 
-@positional(1)
-def send_registration_mail(email, request, **kwargs):
+def send_registration_mail(email, *, request, **kwargs):
     """send_registration_mail(email, *, request, **kwargs)
     Sends the registration mail
 
@@ -119,8 +115,7 @@ def send_registration_mail(email, request, **kwargs):
     ).send()
 
 
-@positional(1)
-def decode(code, max_age):
+def decode(code, *, max_age):
     """decode(code, *, max_age)
     Decodes the code from the registration link and returns a tuple consisting
     of the verified email address and the payload which was passed through to

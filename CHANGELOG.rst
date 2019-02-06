@@ -5,6 +5,7 @@ Change log
 `Next version`_
 ===============
 
+- Dropped support for Python 2.
 - Fixed a few problems around inactive users where authlib would either
   handle them incorrectly or reveal that inactive users exist.
 - Added many unittests, raised the code coverage to 100% (except for the

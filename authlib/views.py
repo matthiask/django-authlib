@@ -12,7 +12,6 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from authlib.email import decode, send_registration_mail
-from authlib.utils import positional
 
 
 REDIRECT_COOKIE_NAME = "authlib-next"
@@ -42,8 +41,7 @@ def retrieve_next(request):
     )
 
 
-@positional(1)
-def post_login_response(request, new_user):
+def post_login_response(request, *, new_user):
     response = redirect(retrieve_next(request) or settings.LOGIN_REDIRECT_URL)
     response.delete_cookie(REDIRECT_COOKIE_NAME)
     return response
@@ -53,8 +51,7 @@ def post_logout_response(request):
     return redirect("login")
 
 
-@positional(1)
-def email_login(request, email, **kwargs):
+def email_login(request, *, email, **kwargs):
     """
     Given a request, an email and optionally some additional data, ensure that
     a user with the email address exists, and authenticate & login them right
@@ -74,9 +71,9 @@ def email_login(request, email, **kwargs):
 @never_cache
 @sensitive_post_parameters()
 @set_next_cookie
-@positional(1)
 def login(
     request,
+    *,
     template_name="registration/login.html",
     authentication_form=AuthenticationForm,
     post_login_response=post_login_response,
@@ -91,9 +88,9 @@ def login(
 
 
 @never_cache
-@positional(1)
 def oauth2(
     request,
+    *,
     client_class,
     post_login_response=post_login_response,
     email_login=email_login,
@@ -141,7 +138,6 @@ class EmailRegistrationForm(forms.Form):
                 )
         return email
 
-    @positional(1)
     def send_mail(self, **kwargs):
         send_registration_mail(
             self.cleaned_data["email"], request=self.request, **kwargs
@@ -149,9 +145,9 @@ class EmailRegistrationForm(forms.Form):
 
 
 @never_cache
-@positional(1)
 def email_registration(
     request,
+    *,
     code=None,
     registration_form=EmailRegistrationForm,
     post_login_response=post_login_response,
@@ -185,7 +181,6 @@ def email_registration(
 
 
 @never_cache
-@positional(1)
-def logout(request, post_logout_response=post_logout_response):
+def logout(request, *, post_logout_response=post_logout_response):
     auth.logout(request)
     return post_logout_response(request)

@@ -1,8 +1,8 @@
 import requests_mock
 from contextlib import contextmanager
+from urllib.parse import urlparse, parse_qsl
 
 from django.test import Client, TestCase
-from django.utils.six.moves.urllib.parse import urlparse, parse_qsl
 from django.utils.translation import deactivate_all
 
 from authlib.base_user import BaseUser
