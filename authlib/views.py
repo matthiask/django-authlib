@@ -76,7 +76,7 @@ def login(
     *,
     template_name="registration/login.html",
     authentication_form=AuthenticationForm,
-    post_login_response=post_login_response,
+    post_login_response=post_login_response
 ):
     form = authentication_form(
         data=request.POST if request.method == "POST" else None, request=request
@@ -93,7 +93,7 @@ def oauth2(
     *,
     client_class,
     post_login_response=post_login_response,
-    email_login=email_login,
+    email_login=email_login
 ):
     client = client_class(request)
 
@@ -152,7 +152,7 @@ def email_registration(
     registration_form=EmailRegistrationForm,
     post_login_response=post_login_response,
     max_age=3600 * 3,
-    email_login=email_login,
+    email_login=email_login
 ):
     if code is None:
         form = registration_form(
