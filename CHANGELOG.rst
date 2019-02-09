@@ -5,6 +5,9 @@ Change log
 `Next version`_
 ===============
 
+`0.9`_ (2019-02-09)
+===================
+
 - Dropped support for Python 2.
 - Fixed a few problems around inactive users where authlib would either
   handle them incorrectly or reveal that inactive users exist.
@@ -155,4 +158,5 @@ Change log
 .. _0.6: https://github.com/matthiask/django-authlib/compare/0.5...0.6
 .. _0.7: https://github.com/matthiask/django-authlib/compare/0.6...0.7
 .. _0.8: https://github.com/matthiask/django-authlib/compare/0.7...0.8
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.8...master
+.. _0.9: https://github.com/matthiask/django-authlib/compare/0.8...0.9
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.9...master
