@@ -24,6 +24,7 @@ Change log
   from ``authlib.views`` for redirecting users after authentication.
 - Fixed a possible crash in the Twitter OAuth flow when the token from
   the authentication redirect cannot be determined anymore.
+- Fixed a crash in the OAuth2 view if fetching user data fails.
 
 
 `0.8`_ (2018-11-17)

@@ -100,7 +100,12 @@ def oauth2(
     if all(key not in request.GET for key in ("code", "oauth_token")):
         return redirect(client.get_authentication_url())
 
-    user_data = client.get_user_data()
+    try:
+        user_data = client.get_user_data()
+    except Exception:
+        messages.error(request, _("Error while fetching user data. Please try again."))
+        return redirect("login")
+
     email = user_data.pop("email", None)
 
     if email:
