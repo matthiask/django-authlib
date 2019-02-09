@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-04 20:47+0100\n"
+"POT-Creation-Date: 2019-02-09 17:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,11 +22,11 @@ msgstr ""
 msgid "Log in using Google"
 msgstr "Mit Google anmelden"
 
-#: admin_oauth/views.py:47
+#: admin_oauth/views.py:39
 #, python-format
 msgid "No matching staff users for email address '%s'"
 msgstr "Kein passendes Mitarbeiter-Konto für Emailadresse '%s' gefunden."
 
-#: admin_oauth/views.py:50
+#: admin_oauth/views.py:42
 msgid "Could not determine your email address."
 msgstr "Konnte Emailadresse nicht bestimmen."
