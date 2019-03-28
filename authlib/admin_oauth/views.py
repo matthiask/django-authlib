@@ -11,12 +11,15 @@ from authlib.views import set_next_cookie, retrieve_next
 
 
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
+ADMIN_OAUTH_LOGIN_HINT = "admin-oauth-login-hint"
 
 
 @never_cache
 @set_next_cookie
 def admin_oauth(request):
-    client = GoogleOAuth2Client(request)
+    client = GoogleOAuth2Client(
+        request, login_hint=request.COOKIES.get(ADMIN_OAUTH_LOGIN_HINT) or ""
+    )
 
     if all(key not in request.GET for key in ("code", "oauth_token")):
         return redirect(client.get_authentication_url())
@@ -33,11 +36,17 @@ def admin_oauth(request):
                 user = auth.authenticate(email=user_mail)
                 if user and user.is_staff:
                     auth.login(request, user)
-                    return redirect(retrieve_next(request) or "admin:index")
+                    response = redirect(retrieve_next(request) or "admin:index")
+                    response.set_cookie(
+                        ADMIN_OAUTH_LOGIN_HINT, email, expires=30 * 86400
+                    )
+                    return response
 
         messages.error(
             request, _("No matching staff users for email address '%s'") % email
         )
     else:
         messages.error(request, _("Could not determine your email address."))
-    return redirect("admin:login")
+    response = redirect("admin:login")
+    response.delete_cookie(ADMIN_OAUTH_LOGIN_HINT)
+    return response

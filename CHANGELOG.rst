@@ -5,6 +5,11 @@ Change log
 `Next version`_
 ===============
 
+- Modified ``authlib.admin_oauth`` to persist the users' email address
+  and pass it to Google as a ``login_hint`` so that website managers do
+  not have to repeatedly select the account over and over.
+
+
 `0.9`_ (2019-02-09)
 ===================
 
