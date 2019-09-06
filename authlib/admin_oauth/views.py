@@ -24,9 +24,13 @@ def admin_oauth(request):
     if all(key not in request.GET for key in ("code", "oauth_token")):
         return redirect(client.get_authentication_url())
 
-    user_data = client.get_user_data()
-    email = user_data.get("email")
+    try:
+        user_data = client.get_user_data()
+    except Exception:
+        messages.error(request, _("Error while fetching user data. Please try again."))
+        return redirect("admin:login")
 
+    email = user_data.get("email")
     if email:
         for pattern, user_mail in ADMIN_OAUTH_PATTERNS:
             match = re.search(pattern, email)
