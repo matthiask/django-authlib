@@ -6,12 +6,16 @@ from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
-from django.utils.http import is_safe_url
 from django.utils.translation import ugettext as _, ugettext_lazy
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from authlib.email import decode, send_registration_mail
+
+try:
+    from django.utils.http import url_has_allowed_host_and_scheme
+except ImportError:  # Django<3
+    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme
 
 
 REDIRECT_COOKIE_NAME = "authlib-next"
@@ -32,7 +36,7 @@ def retrieve_next(request):
     next = request.COOKIES.get(REDIRECT_COOKIE_NAME)
     return (
         next
-        if is_safe_url(
+        if url_has_allowed_host_and_scheme(
             url=next,
             allowed_hosts={request.get_host()},
             require_https=request.is_secure(),
