@@ -36,7 +36,7 @@ class FacebookOAuth2Client(object):
             ),
         )
         data = self._session.get(
-            "https://graph.facebook.com/v2.12/me", params={"fields": "email,name"}
+            "https://graph.facebook.com/me", params={"fields": "email,name"}
         ).json()
 
         return {"email": data.get("email"), "full_name": data.get("name")}
