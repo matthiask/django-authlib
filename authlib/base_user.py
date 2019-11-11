@@ -1,7 +1,7 @@
 from django.contrib.auth import models as auth_models
 from django.db import models
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class BaseUserManager(auth_models.BaseUserManager):

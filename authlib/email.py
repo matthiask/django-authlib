@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import TemplateDoesNotExist, render_to_string
 from django.urls import reverse
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 
 
 # Assumes that this is a model with an unique `email` field.

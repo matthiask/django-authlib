@@ -3,7 +3,7 @@ import re
 from django.conf import settings
 from django.contrib import auth, messages
 from django.shortcuts import redirect
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 
 from authlib.google import GoogleOAuth2Client

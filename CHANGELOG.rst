@@ -9,6 +9,7 @@ Change log
   and pass it to Google as a ``login_hint`` so that website managers do
   not have to repeatedly select the account over and over.
 - Fixed an ``authlib.admin_oauth`` crash when fetching user data fails.
+- Replaced ``ugettext*`` with ``gettext*``.
 
 
 `0.9`_ (2019-02-09)
