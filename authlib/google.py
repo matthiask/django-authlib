@@ -12,7 +12,7 @@ class GoogleOAuth2Client(object):
     client_id = settings.GOOGLE_CLIENT_ID
     client_secret = settings.GOOGLE_CLIENT_SECRET
 
-    def __init__(self, request, *, login_hint=None):
+    def __init__(self, request, *, login_hint=None, authorization_params={}):
         # let oauthlib be less strict on scope mismatch
         os.environ["OAUTHLIB_RELAX_TOKEN_SCOPE"] = "1"
 
@@ -23,10 +23,12 @@ class GoogleOAuth2Client(object):
             redirect_uri=request.build_absolute_uri("."),
         )
         self._login_hint = login_hint
+        self._authorization_params = authorization_params
 
     def get_authentication_url(self):
+        self._authorization_params.setdefault("login_hint", self._login_hint)
         authorization_url, self._state = self._session.authorization_url(
-            self.authorization_base_url, login_hint=self._login_hint
+            self.authorization_base_url, **self._authorization_params
         )
 
         return authorization_url

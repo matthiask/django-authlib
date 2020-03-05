@@ -8,6 +8,8 @@ Change log
 - Modified ``authlib.admin_oauth`` to persist the users' email address
   and pass it to Google as a ``login_hint`` so that website managers do
   not have to repeatedly select the account over and over.
+- Allowed specifying arbitrary query parameters for Google's
+  authorization URL.
 - Fixed an ``authlib.admin_oauth`` crash when fetching user data fails.
 - Replaced ``ugettext*`` with ``gettext*``.
 
