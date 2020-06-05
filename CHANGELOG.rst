@@ -12,6 +12,7 @@ Change log
   authorization URL.
 - Fixed an ``authlib.admin_oauth`` crash when fetching user data fails.
 - Replaced ``ugettext*`` with ``gettext*``.
+- Replaced ``url()`` with ``re_path()``.
 
 
 `0.9`_ (2019-02-09)
