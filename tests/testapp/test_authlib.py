@@ -147,8 +147,8 @@ class Test(TestCase):
 
     def test_strange_email(self):
         user = User(email="no-email")
-        self.assertEqual(user.get_full_name(), "no-***@***")
-        self.assertEqual(str(user), "no-***@***")
+        self.assertEqual(user.get_full_name(), "no-***")
+        self.assertEqual(str(user), "no-***")
 
 
 class OAuth2Test(TestCase):
