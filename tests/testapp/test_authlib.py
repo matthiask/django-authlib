@@ -3,6 +3,7 @@ from contextlib import contextmanager
 from urllib.parse import urlparse, parse_qsl
 
 from django.test import Client, TestCase
+from django.test.utils import isolate_apps
 from django.utils.translation import deactivate_all
 
 from authlib.base_user import BaseUser
@@ -40,8 +41,12 @@ class Test(TestCase):
         with self.assertRaises(ValueError):
             User.objects.create_user("")
 
+    @isolate_apps("authlib")
     def test_user(self):
-        user = BaseUser(email="test@example.com")
+        class User(BaseUser):
+            pass
+
+        user = User(email="test@example.com")
         self.assertEqual("{}".format(user), "test@example.com")
         self.assertEqual(user.get_full_name(), "test@example.com")
         self.assertEqual(user.get_short_name(), "test@example.com")
