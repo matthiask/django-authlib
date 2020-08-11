@@ -13,6 +13,8 @@ Change log
 - Fixed an ``authlib.admin_oauth`` crash when fetching user data fails.
 - Replaced ``ugettext*`` with ``gettext*``.
 - Replaced ``url()`` with ``re_path()``.
+- Fixed a crash when creating ``little_auth`` users with invalid email
+  addresses.
 
 
 `0.9`_ (2019-02-09)

@@ -145,6 +145,11 @@ class Test(TestCase):
         )
         self.assertRedirects(response, "/?login=1", fetch_redirect_response=False)
 
+    def test_strange_email(self):
+        user = User(email="no-email")
+        self.assertEqual(user.get_full_name(), "no-***@***")
+        self.assertEqual(str(user), "no-***@***")
+
 
 class OAuth2Test(TestCase):
     def test_oauth2_authorization_redirect(self):

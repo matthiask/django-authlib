@@ -5,7 +5,7 @@ from authlib.base_user import BaseUser
 
 
 def _obfuscate(email):
-    user, domain = email.rsplit("@", 1)
+    user, _sep, domain = email.partition("@")
     return "%s%s@***.%s" % (
         user[:3],
         "***" if len(user) > 3 else "",
