@@ -15,6 +15,7 @@ Change log
 - Replaced ``url()`` with ``re_path()``.
 - Fixed a crash when creating ``little_auth`` users with invalid email
   addresses.
+- Stopped carrying over login hints from one user to the other...
 
 
 `0.9`_ (2019-02-09)
