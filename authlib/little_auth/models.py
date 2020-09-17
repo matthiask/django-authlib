@@ -8,7 +8,11 @@ def _obfuscate(email):
     user, _sep, domain = email.partition("@")
     return (
         "%s%s@***.%s"
-        % (user[:3], "***" if len(user) > 3 else "", domain.rsplit(".", 1)[-1],)
+        % (
+            user[:3],
+            "***" if len(user) > 3 else "",
+            domain.rsplit(".", 1)[-1],
+        )
         if domain
         else "%s***" % (user[:3],)
     )
