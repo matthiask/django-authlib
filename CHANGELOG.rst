@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+
+`0.10`_ (2020-10-04)
+====================
+
 - Modified ``authlib.admin_oauth`` to persist the users' email address
   and pass it to Google as a ``login_hint`` so that website managers do
   not have to repeatedly select the account over and over.
@@ -15,7 +19,8 @@ Change log
 - Replaced ``url()`` with ``re_path()``.
 - Fixed a crash when creating ``little_auth`` users with invalid email
   addresses.
-- Stopped carrying over login hints from one user to the other...
+- Stopped carrying over login hints from one user to the other in the
+  Google OAuth client...
 - **BACKWARDS INCOMPATIBLE** Dropped the request argument from
   ``authlib.email.get_confirmation_code``, it wasn't used, ever.
 
@@ -174,4 +179,5 @@ Change log
 .. _0.7: https://github.com/matthiask/django-authlib/compare/0.6...0.7
 .. _0.8: https://github.com/matthiask/django-authlib/compare/0.7...0.8
 .. _0.9: https://github.com/matthiask/django-authlib/compare/0.8...0.9
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.9...master
+.. _0.10: https://github.com/matthiask/django-authlib/compare/0.9...0.10
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.10...master
