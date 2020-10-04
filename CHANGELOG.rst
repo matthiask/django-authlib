@@ -16,6 +16,8 @@ Change log
 - Fixed a crash when creating ``little_auth`` users with invalid email
   addresses.
 - Stopped carrying over login hints from one user to the other...
+- **BACKWARDS INCOMPATIBLE** Dropped the request argument from
+  ``authlib.email.get_confirmation_code``, it wasn't used, ever.
 
 
 `0.9`_ (2019-02-09)

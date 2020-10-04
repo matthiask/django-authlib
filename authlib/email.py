@@ -69,8 +69,8 @@ def get_signer(salt="email_registration"):
     return signing.TimestampSigner(salt=salt)
 
 
-def get_confirmation_code(email, request, *, payload=""):
-    """get_confirmation_code(email, request, *, payload="")
+def get_confirmation_code(email, *, payload=""):
+    """
     Returns the code for the confirmation URL
 
     The payload should be a string already.
@@ -83,7 +83,7 @@ def get_confirmation_url(email, request, name="email_registration_confirm", **kw
     Returns the confirmation URL
     """
     return request.build_absolute_uri(
-        reverse(name, kwargs={"code": get_confirmation_code(email, request, **kwargs)})
+        reverse(name, kwargs={"code": get_confirmation_code(email, **kwargs)})
     )
 
 

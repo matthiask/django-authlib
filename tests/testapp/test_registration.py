@@ -124,8 +124,7 @@ class RegistrationTest(TestCase):
         )
 
     def test_expiry(self):
-        request = RequestFactory().get("/")
-        code = get_confirmation_code("test@example.com", request)
+        code = get_confirmation_code("test@example.com")
         self.assertTrue(code.startswith("test@example.com::"))
 
         self.assertEqual(decode(code, max_age=5), ["test@example.com", ""])
