@@ -3,7 +3,6 @@ build
 .coverage
 dist
 /*.egg-info
-.github
 htmlcov
 /MANIFEST
 *.py?
