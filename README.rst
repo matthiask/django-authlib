@@ -2,8 +2,9 @@
 django-authlib - Authentication utils for Django
 ================================================
 
-.. image:: https://travis-ci.org/matthiask/django-authlib.svg?branch=master
-   :target: https://travis-ci.org/matthiask/django-authlib
+.. image:: https://github.com/matthiask/django-authlib/actions/workflows/tests.yml/badge.svg
+    :target: https://github.com/matthiask/django-authlib/
+    :alt: CI Status
 
 .. image:: https://readthedocs.org/projects/django-authlib/badge/?version=latest
     :target: https://django-authlib.readthedocs.io/en/latest/?badge=latest

@@ -1,7 +1,6 @@
 import os
 
 from django.conf import settings
-
 from requests_oauthlib import OAuth2Session
 
 

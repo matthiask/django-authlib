@@ -12,6 +12,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 
 from authlib.email import decode, send_registration_mail
 
+
 try:
     from django.utils.http import url_has_allowed_host_and_scheme
 except ImportError:  # Django<3

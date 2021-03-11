@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import never_cache
 
 from authlib.google import GoogleOAuth2Client
-from authlib.views import set_next_cookie, retrieve_next
+from authlib.views import retrieve_next, set_next_cookie
 
 
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS

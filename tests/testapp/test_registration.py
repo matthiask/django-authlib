@@ -9,8 +9,8 @@ from django.utils import timezone
 from django.utils.http import urlunquote
 
 from authlib.email import (
-    get_confirmation_code,
     decode,
+    get_confirmation_code,
     render_to_mail,
     send_registration_mail,
 )

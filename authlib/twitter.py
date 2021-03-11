@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.core.cache import cache
-
 from requests_oauthlib import OAuth1Session
 
 

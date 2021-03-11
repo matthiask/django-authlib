@@ -1,7 +1,7 @@
-import requests_mock
 from contextlib import contextmanager
-from urllib.parse import urlparse, parse_qsl
+from urllib.parse import parse_qsl, urlparse
 
+import requests_mock
 from django.test import Client, TestCase
 from django.test.utils import isolate_apps
 from django.utils.translation import deactivate_all
