@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 from django.test import Client, TestCase
 from django.test.client import RequestFactory
 from django.utils import timezone
-from django.utils.http import urlunquote
 
 from authlib.email import (
     decode,
@@ -15,6 +14,12 @@ from authlib.email import (
     send_registration_mail,
 )
 from authlib.little_auth.models import User
+
+
+try:
+    from django.utils.http import urlunquote as unquote
+except ImportError:  # Django >= 4
+    from urllib.parse import unquote
 
 
 def _messages(response):
@@ -33,9 +38,7 @@ class RegistrationTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         body = mail.outbox[0].body
-        url = urlunquote(
-            [line for line in body.splitlines() if "testserver" in line][0]
-        )
+        url = unquote([line for line in body.splitlines() if "testserver" in line][0])
 
         self.assertTrue("http://testserver/email/test@example.com::" in url)
 
@@ -68,9 +71,7 @@ class RegistrationTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         body = mail.outbox[0].body
-        url = urlunquote(
-            [line for line in body.splitlines() if "testserver" in line][0]
-        )
+        url = unquote([line for line in body.splitlines() if "testserver" in line][0])
 
         self.assertTrue(re.match(r"http://testserver/email/test@example.com::", url))
 
@@ -114,9 +115,7 @@ class RegistrationTest(TestCase):
 
         self.assertEqual(len(mail.outbox), 1)
         body = mail.outbox[0].body
-        url = urlunquote(
-            [line for line in body.splitlines() if "testserver" in line][0]
-        )
+        url = unquote([line for line in body.splitlines() if "testserver" in line][0])
 
         response = self.client.get(url)
         self.assertEqual(
