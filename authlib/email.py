@@ -33,9 +33,13 @@ def render_to_mail(template, context, **kwargs):
         message = render_to_mail('myproject/hello_mail', {}, to=[email])
         message.send()
     """
+    if not isinstance(template, (list, tuple)):
+        template = [template]
     lines = iter(
         line.rstrip()
-        for line in render_to_string("%s.txt" % template, context).splitlines()
+        for line in render_to_string(
+            ["%s.txt" % t for t in template], context
+        ).splitlines()
     )
 
     subject = ""
@@ -53,7 +57,7 @@ def render_to_mail(template, context, **kwargs):
 
     try:
         message.attach_alternative(
-            render_to_string("%s.html" % template, context), "text/html"
+            render_to_string(["%s.html" % t for t in template], context), "text/html"
         )
     except TemplateDoesNotExist:
         pass
