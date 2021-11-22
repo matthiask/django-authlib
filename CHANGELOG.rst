@@ -8,6 +8,8 @@ Change log
 - Switched to a declarative setup.
 - Switched from Travis CI to GitHub actions.
 - Added Python 3.10, Django 4.0 to the CI.
+- Avoided the additional request to Google endpoints since the access token
+  already contains identity information in the ``id_token`` field.
 
 
 `0.10`_ (2020-10-04)

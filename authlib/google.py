@@ -1,3 +1,5 @@
+import base64
+import json
 import os
 
 from django.conf import settings
@@ -33,15 +35,14 @@ class GoogleOAuth2Client(object):
         return authorization_url
 
     def get_user_data(self):
-        self._session.fetch_token(
+        token = self._session.fetch_token(
             self.token_url,
             client_secret=self.client_secret,
             authorization_response=self._request.build_absolute_uri(
                 self._request.get_full_path()
             ),
         )
-        data = self._session.get("https://www.googleapis.com/oauth2/v3/userinfo").json()
-
+        data = json.loads(base64.urlsafe_b64decode(token["id_token"].split(".")[1]))
         return (
             {"email": data.get("email"), "full_name": data.get("name")}
             if data.get("email_verified")
