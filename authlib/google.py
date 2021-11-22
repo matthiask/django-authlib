@@ -54,6 +54,9 @@ class GoogleOAuth2Client(object):
                 self._request.get_full_path()
             ),
         )
+        # NOTE! We received the id_token directly from Google. Skipping
+        # verification is fine in this case but you MUST NOT SAVE AND USE THIS
+        # TOKEN LATER.
         data = json.loads(b64decode(token["id_token"].split(".")[1]).decode("utf-8"))
         return (
             {"email": data.get("email"), "full_name": data.get("name")}
