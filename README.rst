@@ -62,7 +62,9 @@ Use of bundled views
 
 The following URL patterns are an example for using the bundled views.
 For now you'll have to dig into the code (it's not much, at the time of
-writing ``django-authlib``'s Python code is less than 500 lines)::
+writing ``django-authlib``'s Python code is less than 500 lines):
+
+.. code-block:: python
 
     from django.conf.urls import url
     from authlib import views
@@ -134,13 +136,17 @@ Installation is as follows:
   as described above.
 - Add a ``ADMIN_OAUTH_PATTERNS`` setting. The first item is the domain,
   the second the email address of a staff account. If no matching staff
-  account exists, authentication fails::
+  account exists, authentication fails:
+
+.. code-block:: python
 
     ADMIN_OAUTH_PATTERNS = [
         (r"@example\.com$", "admin@example.com"),
     ]
 
-- Add an entry to your URLconf::
+- Add an entry to your URLconf:
+
+.. code-block:: python
 
     urlpatterns = [
         url(r"", include("authlib.admin_oauth.urls")),
@@ -153,7 +159,9 @@ Installation is as follows:
 Additionally, it is also allowed to use a callable instead of the email
 address in the ``ADMIN_OAUTH_PATTERNS`` setting; the callable is passed
 the result of matching the regex. If a resulting email address does not
-exist, authentication (of course) fails::
+exist, authentication (of course) fails:
+
+.. code-block:: python
 
     ADMIN_OAUTH_PATTERNS = [
         (r"^.*@example\.org$", lambda match: match[0]),
@@ -163,7 +171,9 @@ If a pattern succeeds but no matching user with staff access is found
 processing continues with the next pattern. This means that you can
 authenticate users with their individual accounts (if they have one) and
 fall back to an account for everyone having a Google email address on
-your domain::
+your domain:
+
+.. code-block:: python
 
     ADMIN_OAUTH_PATTERNS = [
         (r"^.*@example\.org$", lambda match: match[0]),
