@@ -5,6 +5,10 @@ Change log
 `Next version`_
 ===============
 
+
+`0.11`_ (2021-11-22)
+====================
+
 - Switched to a declarative setup.
 - Switched from Travis CI to GitHub actions.
 - Added Python 3.10, Django 4.0 to the CI.
@@ -186,4 +190,5 @@ Change log
 .. _0.8: https://github.com/matthiask/django-authlib/compare/0.7...0.8
 .. _0.9: https://github.com/matthiask/django-authlib/compare/0.8...0.9
 .. _0.10: https://github.com/matthiask/django-authlib/compare/0.9...0.10
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.10...master
+.. _0.11: https://github.com/matthiask/django-authlib/compare/0.10...0.11
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.11...main
