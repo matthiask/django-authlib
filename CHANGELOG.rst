@@ -7,6 +7,7 @@ Change log
 
 - Switched to a declarative setup.
 - Switched from Travis CI to GitHub actions.
+- Added Python 3.10, Django 4.0 to the CI.
 
 
 `0.10`_ (2020-10-04)
