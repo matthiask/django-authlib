@@ -6,6 +6,18 @@ from django.conf import settings
 from requests_oauthlib import OAuth2Session
 
 
+def b64decode(input):
+    if isinstance(input, str):
+        input = input.encode("ascii")
+
+    rem = len(input) % 4
+
+    if rem > 0:
+        input += b"=" * (4 - rem)
+
+    return base64.urlsafe_b64decode(input)
+
+
 class GoogleOAuth2Client(object):
     authorization_base_url = "https://accounts.google.com/o/oauth2/v2/auth"
     token_url = "https://www.googleapis.com/oauth2/v4/token"
@@ -42,7 +54,7 @@ class GoogleOAuth2Client(object):
                 self._request.get_full_path()
             ),
         )
-        data = json.loads(base64.urlsafe_b64decode(token["id_token"].split(".")[1]))
+        data = json.loads(b64decode(token["id_token"].split(".")[1]).decode("utf-8"))
         return (
             {"email": data.get("email"), "full_name": data.get("name")}
             if data.get("email_verified")

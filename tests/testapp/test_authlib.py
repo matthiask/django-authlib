@@ -1,3 +1,5 @@
+import base64
+import json
 from contextlib import contextmanager
 from urllib.parse import parse_qsl, urlparse
 
@@ -14,10 +16,18 @@ from authlib.little_auth.models import User
 @contextmanager
 def google_oauth_data(data):
     with requests_mock.Mocker() as m:
-        m.post(
-            "https://www.googleapis.com/oauth2/v4/token", json={"access_token": "123"}
+        jwt = (
+            base64.urlsafe_b64encode(json.dumps(data).encode("utf-8"))
+            .replace(b"=", b"")
+            .decode("utf-8")
         )
-        m.get("https://www.googleapis.com/oauth2/v3/userinfo", json=data)
+        m.post(
+            "https://www.googleapis.com/oauth2/v4/token",
+            json={
+                "access_token": "123",
+                "id_token": f"header.{jwt}.signature",
+            },
+        )
         yield
 
 
