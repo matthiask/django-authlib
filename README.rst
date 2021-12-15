@@ -192,3 +192,62 @@ Usage is as follows:
 - Add ``authlib.little_auth`` to your ``INSTALLED_APPS``
 - Set ``AUTH_USER_MODEL = "little_auth.User"``
 - Optionally also follow any of the steps above.
+
+Email Registration
+==================
+
+For email registration to work, two templates are needed:
+
+* ``registration/email_registration_email.txt``
+* ``registration/email_registration.html``
+
+A starting point would be:
+
+``email_registration_email.txt``:
+.. code-block:: txt
+    Subject (First line is used for the subject of the email)
+
+    Body (From the third line starts the body of the email)
+    {{ url }} (this variable is used for the login url)
+    ...
+
+``email_registration.html``:
+
+.. code-block:: html
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% if form.errors and not form.non_field_errors %}
+    <p class="errornote">
+    {% if form.errors.items|length == 1 %}{% translate "Please correct the error below." %}{% else %}{% translate "Please correct the errors below." %}{% endif %}
+    </p>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <p class="errornote">
+        {{ error }}
+    </p>
+    {% endfor %}
+    {% endif %}
+    <form action='{% url "email_registration" %}' method="post" >
+        {% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+
+        <input type="submit" value="login">
+    </form>
+
+The above template is inspired from:
+* `Messages Django documentation https://docs.djangoproject.com/en/dev/ref/contrib/messages/#displaying-messages`
+* `Django login template https://github.com/django/django/blob/67d0c4644acfd7707be4a31e8976f865509b09ac/django/contrib/admin/templates/admin/login.html#L21-L44`
+
+More details are documented in `email.py https://github.com/matthiask/django-authlib/blob/2fe4fa4c7b267af85cb0dae4507d190fd3c587ee/authlib/email.py`
