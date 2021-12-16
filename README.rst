@@ -192,3 +192,75 @@ Usage is as follows:
 - Add ``authlib.little_auth`` to your ``INSTALLED_APPS``
 - Set ``AUTH_USER_MODEL = "little_auth.User"``
 - Optionally also follow any of the steps above.
+
+Email Registration
+==================
+
+For email registration to work, two templates are needed:
+
+* ``registration/email_registration_email.txt``
+* ``registration/email_registration.html``
+
+
+A starting point would be:
+
+``email_registration_email.txt``:
+
+.. code-block:: text
+
+
+    Subject (1st line)
+
+    Body (3rd line onwards)
+    {{ url }} 
+    ...
+    
+
+``email_registration.html``:
+
+.. code-block:: html
+
+
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+            {{ message }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    
+    {% if form.errors and not form.non_field_errors %}
+    <p class="errornote">
+        {% if form.errors.items|length == 1 %}
+        {% translate "Please correct the error below." %}
+        {% else %}
+        {% translate "Please correct the errors below." %}
+        {% endif %}
+    </p>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <p class="errornote">
+        {{ error }}
+    </p>
+    {% endfor %}
+    {% endif %}
+    
+    <form action='{% url "email_registration" %}' method="post" >
+        {% csrf_token %}
+        <table>
+            {{ form }}
+        </table>
+        <input type="submit" value="login">
+    </form>
+
+The above template is inspired from:
+
+* `Messages Django documentation <https://docs.djangoproject.com/en/dev/ref/contrib/messages/#displaying-messages>`_
+* `Django login template <https://github.com/django/django/blob/67d0c4644acfd7707be4a31e8976f865509b09ac/django/contrib/admin/templates/admin/login.html#L21-L44>`_
+
+More details are documented in `the relevant module <https://github.com/matthiask/django-authlib/blob/main/authlib/email.py>`_.
