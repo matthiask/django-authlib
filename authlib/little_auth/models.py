@@ -14,7 +14,7 @@ def _obfuscate(email):
             domain.rsplit(".", 1)[-1],
         )
         if domain
-        else "%s***" % (user[:3],)
+        else f"{user[:3]}***"
     )
 
 

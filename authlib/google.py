@@ -18,7 +18,7 @@ def b64decode(input):
     return base64.urlsafe_b64decode(input)
 
 
-class GoogleOAuth2Client(object):
+class GoogleOAuth2Client:
     authorization_base_url = "https://accounts.google.com/o/oauth2/v2/auth"
     token_url = "https://www.googleapis.com/oauth2/v4/token"
     scope = ["openid", "email", "profile"]

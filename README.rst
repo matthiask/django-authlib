@@ -212,9 +212,9 @@ A starting point would be:
     Subject (1st line)
 
     Body (3rd line onwards)
-    {{ url }} 
+    {{ url }}
     ...
-    
+
 
 ``email_registration.html``:
 
@@ -231,7 +231,7 @@ A starting point would be:
         {% endfor %}
     </ul>
     {% endif %}
-    
+
     {% if form.errors and not form.non_field_errors %}
     <p class="errornote">
         {% if form.errors.items|length == 1 %}
@@ -249,7 +249,7 @@ A starting point would be:
     </p>
     {% endfor %}
     {% endif %}
-    
+
     <form action='{% url "email_registration" %}' method="post" >
         {% csrf_token %}
         <table>

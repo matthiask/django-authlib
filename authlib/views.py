@@ -6,17 +6,12 @@ from django.contrib import auth, messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
 from authlib.email import decode, send_registration_mail
-
-
-try:
-    from django.utils.http import url_has_allowed_host_and_scheme
-except ImportError:  # Django<3
-    from django.utils.http import is_safe_url as url_has_allowed_host_and_scheme
 
 
 REDIRECT_COOKIE_NAME = "authlib-next"
@@ -132,7 +127,7 @@ class EmailRegistrationForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-        super(EmailRegistrationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def clean_email(self):
         email = self.cleaned_data.get("email")

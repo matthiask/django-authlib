@@ -16,4 +16,4 @@ def custom_verification(request):
 
 def custom_verification_code(request, code):
     email, payload = decode(code, max_age=100)
-    return HttpResponse("email:{} payload:{}".format(email, payload))
+    return HttpResponse(f"email:{email} payload:{payload}")

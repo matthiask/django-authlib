@@ -1,5 +1,6 @@
 import re
 import time
+from urllib.parse import unquote
 
 from django.core import mail
 from django.core.exceptions import ValidationError
@@ -14,12 +15,6 @@ from authlib.email import (
     send_registration_mail,
 )
 from authlib.little_auth.models import User
-
-
-try:
-    from django.utils.http import urlunquote as unquote
-except ImportError:  # Django >= 4
-    from urllib.parse import unquote
 
 
 def _messages(response):

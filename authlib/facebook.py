@@ -2,7 +2,7 @@ from django.conf import settings
 from requests_oauthlib import OAuth2Session
 
 
-class FacebookOAuth2Client(object):
+class FacebookOAuth2Client:
     authorization_base_url = "https://www.facebook.com/dialog/oauth"
     token_url = "https://graph.facebook.com/oauth/access_token"
     scope = ["email"]

@@ -57,7 +57,7 @@ class Test(TestCase):
             pass
 
         user = User(email="test@example.com")
-        self.assertEqual("{}".format(user), "test@example.com")
+        self.assertEqual(f"{user}", "test@example.com")
         self.assertEqual(user.get_full_name(), "test@example.com")
         self.assertEqual(user.get_short_name(), "test@example.com")
 
