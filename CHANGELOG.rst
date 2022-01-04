@@ -5,8 +5,13 @@ Change log
 `Next version`_
 ===============
 
+
+`0.12`_ (2022-01-04)
+====================
+
 - Added pre-commit.
 - Dropped Python < 3.8, Django < 3.2.
+- Added docs for how to integrate the email registration functionality.
 
 
 `0.11`_ (2021-11-22)
@@ -194,4 +199,5 @@ Change log
 .. _0.9: https://github.com/matthiask/django-authlib/compare/0.8...0.9
 .. _0.10: https://github.com/matthiask/django-authlib/compare/0.9...0.10
 .. _0.11: https://github.com/matthiask/django-authlib/compare/0.10...0.11
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.11...main
+.. _0.12: https://github.com/matthiask/django-authlib/compare/0.11...0.12
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.12...main
