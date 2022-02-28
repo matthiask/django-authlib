@@ -5,6 +5,8 @@ Change log
 `Next version`_
 ===============
 
+- Added a ``default_auto_field`` to the ``little_auth`` appconfig.
+
 
 `0.12`_ (2022-01-04)
 ====================
