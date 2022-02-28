@@ -5,11 +5,21 @@ Change log
 `Next version`_
 ===============
 
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.13...main
+
+
+`0.13`_ (2022-02-28)
+====================
+
+.. _0.13: https://github.com/matthiask/django-authlib/compare/0.12...0.13
+
 - Added a ``default_auto_field`` to the ``little_auth`` appconfig.
 
 
 `0.12`_ (2022-01-04)
 ====================
+
+.. _0.12: https://github.com/matthiask/django-authlib/compare/0.11...0.12
 
 - Added pre-commit.
 - Dropped Python < 3.8, Django < 3.2.
@@ -201,5 +211,3 @@ Change log
 .. _0.9: https://github.com/matthiask/django-authlib/compare/0.8...0.9
 .. _0.10: https://github.com/matthiask/django-authlib/compare/0.9...0.10
 .. _0.11: https://github.com/matthiask/django-authlib/compare/0.10...0.11
-.. _0.12: https://github.com/matthiask/django-authlib/compare/0.11...0.12
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.12...main
