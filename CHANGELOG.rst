@@ -7,6 +7,8 @@ Change log
 
 .. _Next version: https://github.com/matthiask/django-authlib/compare/0.13...main
 
+- Added Django 4.1a1 to the CI matrix.
+
 
 `0.13`_ (2022-02-28)
 ====================

@@ -180,6 +180,9 @@ your domain:
         (r"@example\.com$", "admin@example.com"),
     ]
 
+You could also remove the fallback line; in this case users can only
+authenticate if they have a personal staff account.
+
 Little Auth
 ===========
 
