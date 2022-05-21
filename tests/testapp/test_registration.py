@@ -104,8 +104,6 @@ class RegistrationTest(TestCase):
         self.assertEqual(mail.subject, "")
 
     def test_payload(self):
-        # TODO Add a payload with ":" chars etc. in it, and look it it
-        # arrives again.
         self.client.post("/custom/", {"email": "test42@example.com"})
 
         self.assertEqual(len(mail.outbox), 1)
