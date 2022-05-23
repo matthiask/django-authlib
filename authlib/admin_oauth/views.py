@@ -26,7 +26,8 @@ def admin_oauth(request):
 
     try:
         user_data = client.get_user_data()
-    except Exception:
+    except Exception as exc:
+        messages.error(request, exc)
         messages.error(request, _("Error while fetching user data. Please try again."))
         return redirect("admin:login")
 
