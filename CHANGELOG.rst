@@ -8,6 +8,8 @@ Change log
 .. _Next version: https://github.com/matthiask/django-authlib/compare/0.13...main
 
 - Added Django 4.1a1 to the CI matrix.
+- Made the bundled OAuth2 views pass the exception message to
+  ``messages.error`` to ease debugging a bit.
 
 
 `0.13`_ (2022-02-28)
