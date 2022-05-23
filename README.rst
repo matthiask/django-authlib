@@ -56,6 +56,20 @@ settings:
 Note that you have to configure the Twitter app to allow email access,
 this is not enabled by default.
 
+.. note::
+    If you want to use OAuth2 providers in development mode (without HTTPS) you
+    could add the following lines to your ``settings.py``:
+
+    .. code-block:: python
+
+        if DEBUG:
+            # NEVER set this variable in production environments!
+            os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
+    This is required because of the strictness of
+    `oauthlib <https://pypi.org/project/oauthlib/>`__ which only wants HTTPS
+    URLs (and rightly so).
+
 
 Use of bundled views
 ====================
