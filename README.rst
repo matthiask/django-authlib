@@ -144,6 +144,7 @@ backend (``EmailBackend``) for this.
 
 Installation is as follows:
 
+- Follow the steps in the "Usage" section above.
 - Add ``authlib.admin_oauth`` to your ``INSTALLED_APPS`` before
   ``django.contrib.admin``, so that our login template is picked up.
 - Add ``GOOGLE_CLIENT_ID`` and ``GOOGLE_CLIENT_SECRET`` to your settings
