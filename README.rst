@@ -171,10 +171,14 @@ Installation is as follows:
 - Add ``https://yourdomain.com/admin/__oauth__/`` as a valid redirect
   URI in your Google developers console.
 
-Additionally, it is also allowed to use a callable instead of the email
-address in the ``ADMIN_OAUTH_PATTERNS`` setting; the callable is passed
-the result of matching the regex. If a resulting email address does not
-exist, authentication (of course) fails:
+Please note that the ``authlib.admin_oauth.urls`` module assumes that the admin
+site is registered at ``/admin/``. If this is not the case you can integrate
+the view yourself under a different URL.
+
+It is also allowed to use a callable instead of the email address in the
+``ADMIN_OAUTH_PATTERNS`` setting; the callable is passed the result of matching
+the regex. If a resulting email address does not exist, authentication (of
+course) fails:
 
 .. code-block:: python
 
