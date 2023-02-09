@@ -10,7 +10,7 @@ from authlib.twitter import TwitterOAuthClient
 
 
 urlpatterns = [
-    re_path(r"", include("authlib.admin_oauth.urls")),
+    path("", include("authlib.admin_oauth.urls")),
     re_path(r"^admin/", admin.site.urls),
     path("404/", lambda request: render(request, "404.html")),
     path("login/", views.login, name="login"),
