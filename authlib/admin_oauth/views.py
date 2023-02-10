@@ -12,11 +12,13 @@ from authlib.views import retrieve_next, set_next_cookie
 
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 ADMIN_OAUTH_LOGIN_HINT = "admin-oauth-login-hint"
+ADMIN_OAUTH_CREATE_USER_IF_MISSING = settings.ADMIN_OAUTH_CREATE_USER_IF_MISSING
 
 
 @never_cache
 @set_next_cookie
 def admin_oauth(request):
+    from django.contrib.auth import get_user_model
     client = GoogleOAuth2Client(
         request, login_hint=request.COOKIES.get(ADMIN_OAUTH_LOGIN_HINT) or ""
     )
@@ -39,6 +41,11 @@ def admin_oauth(request):
                 if callable(user_mail):
                     user_mail = user_mail(match)
                 user = auth.authenticate(email=user_mail)
+                if ADMIN_OAUTH_CREATE_USER_IF_MISSING == True and not user:
+                    user_model = get_user_model()
+                    user = user_model.objects.create(
+                        email=user_mail, username=user_mail, is_active=True, is_staff=True, is_superuser=True
+                    )
                 if user and user.is_staff:
                     auth.login(request, user)
                     response = redirect(retrieve_next(request) or "admin:index")
