@@ -5,7 +5,13 @@ Change log
 `Next version`_
 ===============
 
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.13...main
+.. _Next version: https://github.com/matthiask/django-authlib/compare/0.14...main
+
+
+`0.14`_ (2023-03-21)
+====================
+
+.. _0.14: https://github.com/matthiask/django-authlib/compare/0.13...0.14
 
 - Added Django 4.1 and 4.2 to the CI matrix.
 - Made the bundled OAuth2 views pass the exception message to
@@ -13,6 +19,7 @@ Change log
 - Changed the confirmation code used by ``authlib.email`` to be base64 encoded.
   This avoids problems where some email clients would mangle the link because
   of the included email address. Older codes are still accepted for the moment.
+- Added a note regarding ``OAUTHLIB_INSECURE_TRANSPORT`` to the README.
 
 
 `0.13`_ (2022-02-28)
