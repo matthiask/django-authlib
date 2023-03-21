@@ -35,7 +35,7 @@ class RegistrationTest(TestCase):
         body = mail.outbox[0].body
         url = unquote([line for line in body.splitlines() if "testserver" in line][0])
 
-        self.assertTrue("http://testserver/email/test@example.com::" in url)
+        self.assertTrue("http://testserver/email/dGVzdEBleGFtcGxlLmNvbTo:" in url)
 
         response = client.get(url)
         self.assertRedirects(response, "/?login=1", fetch_redirect_response=False)
@@ -68,7 +68,9 @@ class RegistrationTest(TestCase):
         body = mail.outbox[0].body
         url = unquote([line for line in body.splitlines() if "testserver" in line][0])
 
-        self.assertTrue(re.match(r"http://testserver/email/test@example.com::", url))
+        self.assertTrue(
+            re.match(r"http://testserver/email/dGVzdEBleGFtcGxlLmNvbTo:", url)
+        )
 
         response = self.client.get(url)
 
@@ -80,7 +82,7 @@ class RegistrationTest(TestCase):
         user.last_login = timezone.now()
         user.save()
 
-        response = self.client.get(url.replace("com:", "ch:", 1), follow=True)
+        response = self.client.get(url.replace("dGVz", "dGVa", 1), follow=True)
         self.assertEqual(
             _messages(response),
             [
@@ -117,7 +119,7 @@ class RegistrationTest(TestCase):
 
     def test_expiry(self):
         code = get_confirmation_code("test@example.com")
-        self.assertTrue(code.startswith("test@example.com::"))
+        self.assertTrue(code.startswith("dGVzdEBleGFtcGxlLmNvbTo:"))
 
         self.assertEqual(decode(code, max_age=5), ["test@example.com", ""])
 

@@ -1,3 +1,5 @@
+import binascii
+
 from django.contrib.auth import get_user_model
 from django.core import signing
 from django.core.exceptions import ValidationError
@@ -79,7 +81,8 @@ def get_confirmation_code(email, *, payload=""):
 
     The payload should be a string already.
     """
-    return get_signer().sign(":".join([email, payload]))
+    s = f"{email}:{payload}"
+    return get_signer().sign(signing.b64_encode(s.encode("utf-8")).decode("utf-8"))
 
 
 def get_confirmation_url(email, request, name="email_registration_confirm", **kwargs):
@@ -146,5 +149,11 @@ def decode(code, *, max_age):
             ),
             code="email_registration_signature",
         )
+
+    try:
+        data = signing.b64_decode(data.encode("utf-8")).decode("utf-8")
+    except (binascii.Error, UnicodeDecodeError):
+        if ":" not in data:
+            raise
 
     return data.split(":", 1)
