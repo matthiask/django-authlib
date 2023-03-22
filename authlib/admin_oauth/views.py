@@ -8,17 +8,17 @@ from django.views.decorators.cache import never_cache
 
 from authlib.google import GoogleOAuth2Client
 from authlib.views import retrieve_next, set_next_cookie
-
+from django.utils.module_loading import import_string
 
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 ADMIN_OAUTH_LOGIN_HINT = "admin-oauth-login-hint"
-ADMIN_OAUTH_CREATE_USER_IF_MISSING = settings.ADMIN_OAUTH_CREATE_USER_IF_MISSING
+ADMIN_OAUTH_CREATE_USER_IF_MISSING = getattr(settings, "ADMIN_OAUTH_CREATE_USER_IF_MISSING", False)
+ADMIN_OAUTH_CREATE_USER_CALLBACK = getattr(settings, "ADMIN_OAUTH_CREATE_USER_CALLBACK", None)
 
 
 @never_cache
 @set_next_cookie
 def admin_oauth(request):
-    from django.contrib.auth import get_user_model
     client = GoogleOAuth2Client(
         request, login_hint=request.COOKIES.get(ADMIN_OAUTH_LOGIN_HINT) or ""
     )
@@ -41,11 +41,18 @@ def admin_oauth(request):
                 if callable(user_mail):
                     user_mail = user_mail(match)
                 user = auth.authenticate(email=user_mail)
-                if ADMIN_OAUTH_CREATE_USER_IF_MISSING == True and not user:
-                    user_model = get_user_model()
-                    user = user_model.objects.create(
-                        email=user_mail, username=user_mail, is_active=True, is_staff=True, is_superuser=True
-                    )
+                if not user and ADMIN_OAUTH_CREATE_USER_IF_MISSING == True and ADMIN_OAUTH_CREATE_USER_CALLBACK is not None:
+                    try:
+                        create_user_method = import_string(ADMIN_OAUTH_CREATE_USER_CALLBACK)
+                        user = create_user_method(request, email)
+                    except ImportError as e:
+                        messages.error(
+                            request, _("Unable to import '%s' method") % ADMIN_OAUTH_CREATE_USER_CALLBACK
+                        )
+                    except Exception as e:
+                        messages.error(
+                            request, _("Unable to create user with provided '%s' method") % ADMIN_OAUTH_CREATE_USER_CALLBACK
+                        )
                 if user and user.is_staff:
                     auth.login(request, user)
                     response = redirect(retrieve_next(request) or "admin:index")
