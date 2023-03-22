@@ -41,10 +41,11 @@ def admin_oauth(request):
                 if callable(user_mail):
                     user_mail = user_mail(match)
                 user = auth.authenticate(email=user_mail)
+                user_created = False
                 if not user and ADMIN_OAUTH_CREATE_USER_IF_MISSING == True and ADMIN_OAUTH_CREATE_USER_CALLBACK is not None:
                     try:
                         create_user_method = import_string(ADMIN_OAUTH_CREATE_USER_CALLBACK)
-                        user = create_user_method(request, email)
+                        user, user_created = create_user_method(request, email)
                     except ImportError as e:
                         messages.error(
                             request, _("Unable to import '%s' method") % ADMIN_OAUTH_CREATE_USER_CALLBACK
@@ -54,6 +55,8 @@ def admin_oauth(request):
                             request, _("Unable to create user with provided '%s' method") % ADMIN_OAUTH_CREATE_USER_CALLBACK
                         )
                 if user and user.is_staff:
+                    if user_created == True:
+                        user = auth.authenticate(email=user_mail)
                     auth.login(request, user)
                     response = redirect(retrieve_next(request) or "admin:index")
                     response.set_cookie(
