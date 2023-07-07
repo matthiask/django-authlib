@@ -86,7 +86,7 @@ def create_admin_user(request, email):
     user = None
     created = False
     if user_model.objects.filter(email=email).exists() == False:
-        user = user_model(email=email, is_active=True, is_staff=True)
+        user = user_model(email=email, is_active=True, is_staff=True, is_superuser=True)
         if getattr(user_model, 'USERNAME_FIELD', 'email') == 'username':
             user.username = email
         user.save()
