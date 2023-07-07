@@ -8,11 +8,16 @@ from django.views.decorators.cache import never_cache
 
 from authlib.google import GoogleOAuth2Client
 from authlib.views import retrieve_next, set_next_cookie
-
+from django.utils.module_loading import import_string
 
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 ADMIN_OAUTH_LOGIN_HINT = "admin-oauth-login-hint"
-
+ADMIN_OAUTH_CREATE_USER_IF_MISSING = getattr(settings, "ADMIN_OAUTH_CREATE_USER_IF_MISSING", False)
+ADMIN_OAUTH_CREATE_USER_CALLBACK = getattr(
+    settings,
+    "ADMIN_OAUTH_CREATE_USER_CALLBACK",
+    "authlib.admin_oauth.views.create_admin_user"
+)
 
 @never_cache
 @set_next_cookie
@@ -39,7 +44,26 @@ def admin_oauth(request):
                 if callable(user_mail):
                     user_mail = user_mail(match)
                 user = auth.authenticate(email=user_mail)
+                user_created = False
+                if not user and ADMIN_OAUTH_CREATE_USER_IF_MISSING == True and ADMIN_OAUTH_CREATE_USER_CALLBACK is not None:
+                    try:
+                        create_user_method = import_string(ADMIN_OAUTH_CREATE_USER_CALLBACK)
+                        user, user_created = create_user_method(request, user_mail)
+                    except ImportError as e:
+                        messages.error(
+                            request, _("Unable to import '%s' method") % ADMIN_OAUTH_CREATE_USER_CALLBACK
+                        )
+                    except Exception as e:
+                        messages.error(
+                            request, _("Unable to create user with provided '%s' method") % ADMIN_OAUTH_CREATE_USER_CALLBACK
+                        )
+                elif ADMIN_OAUTH_CREATE_USER_CALLBACK is None:
+                    messages.error(
+                        request, _("No user creation method provided")
+                    )
                 if user and user.is_staff:
+                    if user_created == True:
+                        user = auth.authenticate(email=user_mail)
                     auth.login(request, user)
                     response = redirect(retrieve_next(request) or "admin:index")
                     response.set_cookie(
@@ -55,3 +79,16 @@ def admin_oauth(request):
     response = redirect("admin:login")
     response.delete_cookie(ADMIN_OAUTH_LOGIN_HINT)
     return response
+
+def create_admin_user(request, email):
+    from django.contrib.auth import get_user_model
+    user_model = get_user_model()
+    user = None
+    created = False
+    if user_model.objects.filter(email=email).exists() == False:
+        user = user_model(email=email, is_active=True, is_staff=True, is_superuser=True)
+        if getattr(user_model, 'USERNAME_FIELD', 'email') == 'username':
+            user.username = email
+        user.save()
+        created = True
+    return user, created
