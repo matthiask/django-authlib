@@ -7,6 +7,14 @@ Next version
 
 - Added Python 3.11.
 - Switched to hatchling and ruff.
+- Added the option to create admin users during admin OAuth if one doesn't
+  exist already. The ``ADMIN_OAUTH_CREATE_USER_CALLBACK`` setting should be set
+  to the Python path of a callable receiving the request and the email address;
+  this callable can (but doesn't have to) create a new user for the email
+  address if one doesn't exist already. The default is to not create any users.
+  Adding ``ADMIN_OAUTH_CREATE_USER_CALLBACK =
+  "authlib.admin_oauth.views.create_superuser"`` makes creation of new
+  superuser accounts automatic.
 
 
 `0.14`_ (2023-03-21)

@@ -13,13 +13,10 @@ from authlib.views import retrieve_next, set_next_cookie
 
 ADMIN_OAUTH_PATTERNS = settings.ADMIN_OAUTH_PATTERNS
 ADMIN_OAUTH_LOGIN_HINT = "admin-oauth-login-hint"
-ADMIN_OAUTH_CREATE_USER_IF_MISSING = getattr(
-    settings, "ADMIN_OAUTH_CREATE_USER_IF_MISSING", False
-)
 ADMIN_OAUTH_CREATE_USER_CALLBACK = getattr(
     settings,
     "ADMIN_OAUTH_CREATE_USER_CALLBACK",
-    "authlib.admin_oauth.views.create_admin_user",
+    None,
 )
 
 
@@ -48,34 +45,11 @@ def admin_oauth(request):
                 if callable(user_mail):
                     user_mail = user_mail(match)
                 user = auth.authenticate(email=user_mail)
-                user_created = False
-                if (
-                    not user
-                    and ADMIN_OAUTH_CREATE_USER_IF_MISSING is True
-                    and ADMIN_OAUTH_CREATE_USER_CALLBACK is not None
-                ):
-                    try:
-                        create_user_method = import_string(
-                            ADMIN_OAUTH_CREATE_USER_CALLBACK
-                        )
-                        user, user_created = create_user_method(request, user_mail)
-                    except ImportError:
-                        messages.error(
-                            request,
-                            _("Unable to import '%s' method")
-                            % ADMIN_OAUTH_CREATE_USER_CALLBACK,
-                        )
-                    except Exception:
-                        messages.error(
-                            request,
-                            _("Unable to create user with provided '%s' method")
-                            % ADMIN_OAUTH_CREATE_USER_CALLBACK,
-                        )
-                elif ADMIN_OAUTH_CREATE_USER_CALLBACK is None:
-                    messages.error(request, _("No user creation method provided"))
+                if not user and ADMIN_OAUTH_CREATE_USER_CALLBACK:
+                    fn = import_string(ADMIN_OAUTH_CREATE_USER_CALLBACK)
+                    fn(request, user_mail)
+                    user = auth.authenticate(email=user_mail)
                 if user and user.is_staff:
-                    if user_created is True:
-                        user = auth.authenticate(email=user_mail)
                     auth.login(request, user)
                     response = redirect(retrieve_next(request) or "admin:index")
                     response.set_cookie(
@@ -93,16 +67,10 @@ def admin_oauth(request):
     return response
 
 
-def create_admin_user(request, email):
-    from django.contrib.auth import get_user_model
-
-    user_model = get_user_model()
-    user = None
-    created = False
+def create_superuser(request, email):
+    user_model = auth.get_user_model()
     if user_model.objects.filter(email=email).exists() is False:
         user = user_model(email=email, is_active=True, is_staff=True, is_superuser=True)
-        if getattr(user_model, "USERNAME_FIELD", "email") == "username":
-            user.username = email
+        if user.USERNAME_FIELD != "email":
+            setattr(user, user.USERNAME_FIELD, email)
         user.save()
-        created = True
-    return user, created
