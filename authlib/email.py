@@ -1,4 +1,5 @@
 import binascii
+import contextlib
 
 from django.contrib.auth import get_user_model
 from django.core import signing
@@ -57,12 +58,10 @@ def render_to_mail(template, context, **kwargs):
     body = "\n".join(lines).strip("\n")
     message = EmailMultiAlternatives(subject=subject, body=body, **kwargs)
 
-    try:
+    with contextlib.suppress(TemplateDoesNotExist):
         message.attach_alternative(
             render_to_string(["%s.html" % t for t in template], context), "text/html"
         )
-    except TemplateDoesNotExist:
-        pass
 
     return message
 
@@ -135,20 +134,20 @@ def decode(code, *, max_age):
     """
     try:
         data = get_signer().unsign(code, max_age=max_age)
-    except signing.SignatureExpired:
+    except signing.SignatureExpired as exc:
         raise ValidationError(
             _("The link is expired. Please request another registration link."),
             code="email_registration_expired",
-        )
+        ) from exc
 
-    except signing.BadSignature:
+    except signing.BadSignature as exc:
         raise ValidationError(
             _(
                 "Unable to verify the signature. Please request a new"
                 " registration link."
             ),
             code="email_registration_signature",
-        )
+        ) from exc
 
     try:
         data = signing.b64_decode(data.encode("utf-8")).decode("utf-8")

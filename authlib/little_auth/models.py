@@ -6,11 +6,11 @@ from authlib.base_user import BaseUser
 
 def _obfuscate(email):
     user, _sep, domain = email.partition("@")
+    keep = 3
     return (
-        "%s%s@***.%s"
-        % (
-            user[:3],
-            "***" if len(user) > 3 else "",
+        "{}{}@***.{}".format(
+            user[:keep],
+            "***" if len(user) > keep else "",
             domain.rsplit(".", 1)[-1],
         )
         if domain

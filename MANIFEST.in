@@ -1,4 +1,0 @@
-include LICENSE
-include MANIFEST.in
-include README.rst
-recursive-include authlib *.html *.po *.mo *.js *.css

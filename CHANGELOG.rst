@@ -2,10 +2,11 @@
 Change log
 ==========
 
-`Next version`_
-===============
+Next version
+============
 
-.. _Next version: https://github.com/matthiask/django-authlib/compare/0.14...main
+- Added Python 3.11.
+- Switched to hatchling and ruff.
 
 
 `0.14`_ (2023-03-21)

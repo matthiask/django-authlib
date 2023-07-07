@@ -1,6 +1,7 @@
 import base64
 import json
 from contextlib import contextmanager
+from unittest.mock import patch
 from urllib.parse import parse_qsl, urlparse
 
 import requests_mock
@@ -11,7 +12,7 @@ from django.utils.translation import deactivate_all
 from authlib.base_user import BaseUser
 from authlib.facebook import FacebookOAuth2Client
 from authlib.little_auth.models import User
-from unittest.mock import patch
+
 
 @contextmanager
 def google_oauth_data(data):
@@ -123,25 +124,33 @@ class Test(TestCase):
             messages, ["No matching staff users for email address 'bla@example.org'"]
         )
 
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING', True)
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS', [
-        (r"^.*@example\.com$", lambda match: match.group(0)),
-    ])
+    @patch("authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING", new=True)
+    @patch(
+        "authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS",
+        new=[
+            (r"^.*@example\.com$", lambda match: match.group(0)),
+        ],
+    )
     def test_admin_oauth_user_created(self):
         client = Client()
-        with google_oauth_data({"email": "newuser@example.com", "email_verified": True}):
+        with google_oauth_data(
+            {"email": "newuser@example.com", "email_verified": True}
+        ):
             response = client.get("/admin/__oauth__/?code=bla")
         self.assertRedirects(response, "/admin/")
 
         # We are authenticated
         self.assertEqual(client.get("/admin/").status_code, 200)
 
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING', True)
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS', [
-        (r"^.*@example\.com$", lambda match: match.group(0)),
-    ])
+    @patch("authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING", new=True)
+    @patch(
+        "authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS",
+        new=[
+            (r"^.*@example\.com$", lambda match: match.group(0)),
+        ],
+    )
     def test_admin_oauth_user_nocreated(self):
-        user = User.objects.create(
+        User.objects.create(
             email="user@example.com", password="blabla", is_active=False
         )
         client = Client()
@@ -155,11 +164,14 @@ class Test(TestCase):
             messages, ["No matching staff users for email address 'user@example.com'"]
         )
 
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING', True)
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_CALLBACK', None)
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS', [
-        (r"^.*@example\.com$", lambda match: match.group(0)),
-    ])
+    @patch("authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING", new=True)
+    @patch("authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_CALLBACK", new=None)
+    @patch(
+        "authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS",
+        new=[
+            (r"^.*@example\.com$", lambda match: match.group(0)),
+        ],
+    )
     def test_admin_oauth_user_create_method_no_provided(self):
         client = Client()
         with google_oauth_data({"email": "user@example.com", "email_verified": True}):
@@ -169,17 +181,24 @@ class Test(TestCase):
 
         messages = [str(m) for m in response.wsgi_request._messages]
         self.assertEqual(
-            messages, [
+            messages,
+            [
                 "No user creation method provided",
-                "No matching staff users for email address 'user@example.com'"
-            ]
+                "No matching staff users for email address 'user@example.com'",
+            ],
         )
 
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING', True)
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_CALLBACK', 'authlib.admin_oauth.views.unexisting_method')
-    @patch('authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS', [
-        (r"^.*@example\.com$", lambda match: match.group(0)),
-    ])
+    @patch("authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_IF_MISSING", new=True)
+    @patch(
+        "authlib.admin_oauth.views.ADMIN_OAUTH_CREATE_USER_CALLBACK",
+        new="authlib.admin_oauth.views.unexisting_method",
+    )
+    @patch(
+        "authlib.admin_oauth.views.ADMIN_OAUTH_PATTERNS",
+        new=[
+            (r"^.*@example\.com$", lambda match: match.group(0)),
+        ],
+    )
     def test_admin_oauth_user_create_method_not_imported(self):
         client = Client()
         with google_oauth_data({"email": "user@example.com", "email_verified": True}):
@@ -189,10 +208,13 @@ class Test(TestCase):
 
         messages = [str(m) for m in response.wsgi_request._messages]
         self.assertEqual(
-            messages, [
-                "Unable to import '%s' method" % 'authlib.admin_oauth.views.unexisting_method',
-                "No matching staff users for email address 'user@example.com'"
-            ]
+            messages,
+            [
+                "Unable to import '{}' method".format(
+                    "authlib.admin_oauth.views.unexisting_method"
+                ),
+                "No matching staff users for email address 'user@example.com'",
+            ],
         )
 
     def test_authlib(self):

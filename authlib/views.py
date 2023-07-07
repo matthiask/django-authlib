@@ -76,7 +76,7 @@ def login(
     *,
     template_name="registration/login.html",
     authentication_form=AuthenticationForm,
-    post_login_response=post_login_response
+    post_login_response=post_login_response,
 ):
     form = authentication_form(
         data=request.POST if request.method == "POST" else None, request=request
@@ -93,7 +93,7 @@ def oauth2(
     *,
     client_class,
     post_login_response=post_login_response,
-    email_login=email_login
+    email_login=email_login,
 ):
     client = client_class(request)
 
@@ -132,16 +132,20 @@ class EmailRegistrationForm(forms.Form):
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
-        if email:  # pragma: no branch
-            if self.request.user.is_authenticated and email != self.request.user.email:
-                raise forms.ValidationError(
-                    _(
-                        "The email you entered (%(input)s) does not match the"
-                        " email of the account you're logged in as currently"
-                        " (%(current)s)."
-                    )
-                    % {"input": email, "current": self.request.user.email}
+        if (
+            email
+            and (u := self.request.user)
+            and u.is_authenticated
+            and email != u.email
+        ):
+            raise forms.ValidationError(
+                _(
+                    "The email you entered (%(input)s) does not match the"
+                    " email of the account you're logged in as currently"
+                    " (%(current)s)."
                 )
+                % {"input": email, "current": self.request.user.email}
+            )
         return email
 
     def send_mail(self, **kwargs):
@@ -158,7 +162,7 @@ def email_registration(
     registration_form=EmailRegistrationForm,
     post_login_response=post_login_response,
     max_age=3600 * 3,
-    email_login=email_login
+    email_login=email_login,
 ):
     if code is None:
         form = registration_form(

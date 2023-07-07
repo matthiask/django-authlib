@@ -1,12 +1,12 @@
 from django.contrib import admin
 from django.shortcuts import render
 from django.urls import include, path, re_path
-from testapp.views import custom_verification, custom_verification_code
 
 from authlib import views
 from authlib.facebook import FacebookOAuth2Client
 from authlib.google import GoogleOAuth2Client
 from authlib.twitter import TwitterOAuthClient
+from testapp.views import custom_verification, custom_verification_code
 
 
 urlpatterns = [
