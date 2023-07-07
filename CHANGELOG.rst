@@ -5,6 +5,9 @@ Change log
 Next version
 ============
 
+0.15 (2023-07-07)
+=================
+
 - Added Python 3.11.
 - Switched to hatchling and ruff.
 - Added the option to create admin users during admin OAuth if one doesn't
