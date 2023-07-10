@@ -40,6 +40,9 @@ tests = [
 [project.urls]
 Homepage = "http://github.com/matthiask/django-authlib/"
 
+[tool.hatch.build]
+include = ["authlib/"]
+
 [tool.hatch.version]
 path = "authlib/__init__.py"
 

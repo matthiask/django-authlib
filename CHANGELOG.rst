@@ -5,6 +5,9 @@ Change log
 Next version
 ============
 
+- Fixed ``pyproject.toml`` so that data files are actually included.
+
+
 0.15 (2023-07-07)
 =================
 
