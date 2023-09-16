@@ -28,7 +28,6 @@ AUTHLIB_PERMISSION_ROLES = {
                 "admin_sso.*",
                 "accounts.*",
                 "little_auth.*",
-                "*.add_*",
             ],
         ),
     },
