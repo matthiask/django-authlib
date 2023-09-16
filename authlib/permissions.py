@@ -2,6 +2,7 @@ from fnmatch import fnmatch
 from functools import partial
 
 from django import forms
+from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +15,7 @@ def allow_deny_globs(user, perm, obj, allow=(), deny=()):
     return any(fnmatch(perm, rule) for rule in allow)
 
 
-AUTHLIB_ROLES = {
+DEFAULT_ROLES = {
     "default": {
         "title": _("default"),
     },
@@ -32,6 +33,7 @@ AUTHLIB_ROLES = {
         ),
     },
 }
+AUTHLIB_ROLES = getattr(settings, "AUTHLIB_ROLES", DEFAULT_ROLES)
 
 
 class RoleField(models.CharField):
