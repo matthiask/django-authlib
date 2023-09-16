@@ -4,8 +4,6 @@ from django.contrib.auth.models import Permission
 from django.core.exceptions import PermissionDenied
 from django.db.models import ObjectDoesNotExist
 
-from authlib.permissions import AUTHLIB_PERMISSION_ROLES
-
 
 class EmailBackend(ModelBackend):
     def _get_user(self, **kwargs):
@@ -49,8 +47,7 @@ class PermissionsBackend(ModelBackend):
     # def get_all_permissions(self, user, obj=None):
 
     def has_perm(self, user, perm, obj=None):
-        callback, kwargs = AUTHLIB_PERMISSION_ROLES[user.role]["callback"]
-        return user.is_active and callback(user=user, perm=perm, obj=obj, **kwargs)
+        return user._role_has_perm(perm=perm, obj=obj)
 
     # def has_module_perms(self, user, app_label):
     # def with_perm(self, perm, is_active=True, include_superusers=True, obj=None):
