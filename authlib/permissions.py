@@ -1,10 +1,10 @@
 from fnmatch import fnmatch
-from functools import partial
 
 from django import forms
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.db import models
+from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
 
 
@@ -21,15 +21,17 @@ DEFAULT_ROLES = {
     },
     "deny_admin": {
         "title": _("deny accounts"),
-        "callback": partial(
-            allow_deny_globs,
-            allow=["*"],
-            deny=[
-                "auth.*",
-                "admin_sso.*",
-                "accounts.*",
-                "little_auth.*",
-            ],
+        "callback": (
+            "authlib.permissions.allow_deny_globs",
+            {
+                "allow": ["*"],
+                "deny": [
+                    "auth.*",
+                    "admin_sso.*",
+                    "accounts.*",
+                    "little_auth.*",
+                ],
+            },
         ),
     },
 }
@@ -59,5 +61,6 @@ class PermissionsMixin(models.Model):
         abstract = True
 
     def _role_has_perm(self, *, perm, obj):
-        if callback := AUTHLIB_ROLES[self.role].get("callback"):
-            return self.is_active and callback(user=self, perm=perm, obj=obj)
+        if cb := AUTHLIB_ROLES[self.role].get("callback"):
+            callback = import_string(cb[0])
+            return self.is_active and callback(user=self, perm=perm, obj=obj, **cb[1])
