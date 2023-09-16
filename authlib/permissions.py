@@ -14,7 +14,7 @@ def allow_deny_globs(user, perm, obj, allow=(), deny=()):
     return any(fnmatch(perm, rule) for rule in allow)
 
 
-AUTHLIB_PERMISSION_ROLES = {
+AUTHLIB_ROLES = {
     "default": {
         "title": _("default"),
     },
@@ -36,9 +36,7 @@ AUTHLIB_PERMISSION_ROLES = {
 
 class RoleField(models.CharField):
     def __init__(self, *args, **kwargs):
-        kwargs["choices"] = [
-            (key, cfg["title"]) for key, cfg in AUTHLIB_PERMISSION_ROLES.items()
-        ]
+        kwargs["choices"] = [(key, cfg["title"]) for key, cfg in AUTHLIB_ROLES.items()]
         super().__init__(*args, **kwargs)
 
     def deconstruct(self):
@@ -59,5 +57,5 @@ class PermissionsMixin(models.Model):
         abstract = True
 
     def _role_has_perm(self, *, perm, obj):
-        if callback := AUTHLIB_PERMISSION_ROLES[self.role].get("callback"):
+        if callback := AUTHLIB_ROLES[self.role].get("callback"):
             return self.is_active and callback(user=self, perm=perm, obj=obj)
