@@ -53,7 +53,7 @@ class RoleField(models.CharField):
         return super().formfield(**kwargs)
 
 
-class PermissionMixin(models.Model):
+class PermissionsMixin(models.Model):
     role = RoleField(_("role"), max_length=100)
 
     class Meta:
