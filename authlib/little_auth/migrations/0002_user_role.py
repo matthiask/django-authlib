@@ -18,6 +18,5 @@ class Migration(migrations.Migration):
                 max_length=100,
                 verbose_name="role",
             ),
-            preserve_default=False,
         ),
     ]

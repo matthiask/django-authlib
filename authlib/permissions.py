@@ -54,11 +54,11 @@ class RoleField(models.CharField):
 
 
 class PermissionsMixin(models.Model):
-    role = RoleField(_("role"), max_length=100)
+    role = RoleField(_("role"), max_length=100, default="default")
 
     class Meta:
         abstract = True
 
     def _role_has_perm(self, *, perm, obj):
-        callback = AUTHLIB_PERMISSION_ROLES[self.role]["callback"]
-        return self.is_active and callback(user=self, perm=perm, obj=obj)
+        if callback := AUTHLIB_PERMISSION_ROLES[self.role].get("callback"):
+            return self.is_active and callback(user=self, perm=perm, obj=obj)
