@@ -51,7 +51,7 @@ class RoleField(models.CharField):
         return name, "django.db.models.CharField", args, kwargs
 
     def formfield(self, **kwargs):
-        if len(self.choices) <= 1 and False:
+        if len(self.choices) <= 1:
             kwargs.setdefault("initial", self.choices[0][0])
             kwargs.setdefault("widget", forms.HiddenInput)
         return super().formfield(**kwargs)
