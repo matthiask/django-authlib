@@ -6,6 +6,12 @@ Next version
 ============
 
 - Fixed ``pyproject.toml`` so that data files are actually included.
+- Dropped compatibility with Python 3.8.
+- Added utilities for role-based permissions. The idea is to allow a less
+  manual way to specify permissions for groups of users, e.g. content managers
+  which should automatically have access to all models in a list of apps
+  without having to manually update the list of permissions in the Django
+  administration interface.
 
 
 0.15 (2023-07-07)
