@@ -43,7 +43,7 @@ def admin_oauth(request):
             match = re.search(pattern, email)
             if match:
                 if callable(user_mail):
-                    user_mail = user_mail(match)
+                    user_mail = user_mail(match)  # noqa: PLW2901
                 user = auth.authenticate(email=user_mail)
                 if not user and ADMIN_OAUTH_CREATE_USER_CALLBACK:
                     fn = import_string(ADMIN_OAUTH_CREATE_USER_CALLBACK)
