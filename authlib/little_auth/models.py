@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from authlib.base_user import BaseUser
-from authlib.permissions import PermissionsMixin
+from authlib.roles import RoleField
 
 
 def _obfuscate(email):
@@ -19,8 +19,9 @@ def _obfuscate(email):
     )
 
 
-class User(PermissionsMixin, BaseUser):
+class User(BaseUser):
     full_name = models.CharField(_("full name"), max_length=200)
+    role = RoleField()
 
     class Meta(BaseUser.Meta):
         ordering = ["full_name"]
