@@ -75,3 +75,10 @@ class Test(TestCase):
                 "sessions.view_session",
             }
         )
+
+    def test_unknown_role(self):
+        unknown = User.objects.create(
+            email="unknown@example.com",
+            role="unknown",
+        )
+        self.assertFalse(unknown.has_perm("sessions.change_session"))
