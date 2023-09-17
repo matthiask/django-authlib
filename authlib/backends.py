@@ -1,3 +1,5 @@
+from functools import cache
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 from django.contrib.auth.models import Permission
@@ -19,19 +21,19 @@ class EmailBackend(ModelBackend):
         return self._get_user(email=email)
 
 
+@cache
+def _all_perms():
+    queryset = Permission.objects.values_list("content_type__app_label", "codename")
+    return [f"{app_label}.{codename}" for app_label, codename in queryset]
+
+
 class PermissionsBackend(ModelBackend):
     def get_user_permissions(self, user, obj=None):
         attribute = "_user_permissions_cache"
         if not hasattr(user, attribute):
-            all_perms = (
-                f"{app_label}.{codename}"
-                for app_label, codename in Permission.objects.values_list(
-                    "content_type__app_label", "codename"
-                )
-            )
             # ModelBackend can use an optimized variant of this -- we cannot since
             # we don't know what the permission checking callbacks do.
-            perms = {perm for perm in all_perms if self._has_perm(user, perm, obj)}
+            perms = {perm for perm in _all_perms() if self._has_perm(user, perm, obj)}
             setattr(user, attribute, perms)
         return getattr(user, attribute)
 
