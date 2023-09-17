@@ -40,8 +40,8 @@ class RoleField(models.CharField):
         super().contribute_to_class(cls, name)
 
         def _role_has_perm(self, *, perm, obj):
-            if callback := _roles()[self.role].get("callback"):
-                return self.is_active and callback(user=self, perm=perm, obj=obj)
+            if (r := _roles()[getattr(self, name)]) and (cb := r.get("callback")):
+                return self.is_active and cb(user=self, perm=perm, obj=obj)
 
         cls._role_has_perm = _role_has_perm
 

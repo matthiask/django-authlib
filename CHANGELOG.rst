@@ -5,6 +5,11 @@ Change log
 Next version
 ============
 
+- Changed the roles implementation to allow using arbitrary names for the role
+  field.
+- Stopped crashing when encountering an unknown role -- doing nothing in
+  ``has_perm`` is an acceptable fallback.
+
 
 0.16 (2023-09-17)
 =================
