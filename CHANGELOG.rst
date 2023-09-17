@@ -5,6 +5,10 @@ Change log
 Next version
 ============
 
+
+0.16 (2023-09-17)
+=================
+
 - Fixed ``pyproject.toml`` so that data files are actually included.
 - Dropped compatibility with Python 3.8.
 - Added utilities for role-based permissions. The idea is to allow a less
