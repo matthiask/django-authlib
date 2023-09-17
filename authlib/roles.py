@@ -18,21 +18,6 @@ DEFAULT_ROLES = {
     "default": {
         "title": _("default"),
     },
-    "deny_accounts": {
-        "title": _("deny accounts"),
-        "callback": (
-            "authlib.permissions.allow_deny_globs",
-            {
-                "allow": ["*"],
-                "deny": [
-                    "auth.*",
-                    "admin_sso.*",
-                    "accounts.*",
-                    "little_auth.*",
-                ],
-            },
-        ),
-    },
 }
 
 
