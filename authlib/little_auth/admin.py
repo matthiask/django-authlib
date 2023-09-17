@@ -16,9 +16,11 @@ class UserAdmin(StockUserAdmin):
         "is_active",
         "is_staff",
         "is_superuser",
+        "role",
         "date_joined",
     )
-    list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    list_filter = ("is_active", "is_staff", "is_superuser", "role", "groups")
     ordering = ("email",)
     search_fields = ("full_name", "email")
     filter_horizontal = ("groups", "user_permissions")
+    radio_fields = {"role": admin.VERTICAL}
