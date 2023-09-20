@@ -8,9 +8,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 def allow_deny_globs(user, perm, obj, allow=(), deny=()):
-    for rule in deny:
-        if fnmatch(perm, rule):
-            raise PermissionDenied
+    if any(fnmatch(perm, rule) for rule in deny):
+        raise PermissionDenied
     return any(fnmatch(perm, rule) for rule in allow)
 
 
