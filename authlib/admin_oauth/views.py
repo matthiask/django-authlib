@@ -18,14 +18,19 @@ ADMIN_OAUTH_CREATE_USER_CALLBACK = getattr(
     "ADMIN_OAUTH_CREATE_USER_CALLBACK",
     None,
 )
+ADMIN_OAUTH_PROMPT = "admin_oauth_prompt"
 
 
 @never_cache
 @set_next_cookie
 def admin_oauth(request):
-    client = GoogleOAuth2Client(
-        request, login_hint=request.COOKIES.get(ADMIN_OAUTH_LOGIN_HINT) or ""
-    )
+    authorization_params = {
+        "login_hint": request.COOKIES.get(ADMIN_OAUTH_LOGIN_HINT, ""),
+        "prompt": "consent select_account"
+        if request.session.pop(ADMIN_OAUTH_PROMPT, False)
+        else "",
+    }
+    client = GoogleOAuth2Client(request, authorization_params=authorization_params)
 
     if all(key not in request.GET for key in ("code", "oauth_token")):
         return redirect(client.get_authentication_url())
@@ -60,6 +65,7 @@ def admin_oauth(request):
         messages.error(
             request, _("No matching staff users for email address '%s'") % email
         )
+        request.session[ADMIN_OAUTH_PROMPT] = True
     else:
         messages.error(request, _("Could not determine your email address."))
     response = redirect("admin:login")

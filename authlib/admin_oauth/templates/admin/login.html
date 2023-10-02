@@ -31,6 +31,6 @@
 {% block content %}
 {{ block.super }}
 <div class="admin-sso">
-  <a class="button" href="{% url 'admin_oauth' %}?next={{ request.GET.next }}">{% trans "Log in using Google" %}</a>
+  <a class="button" href="{% url 'admin_oauth' %}?next={{ request.GET.next }}">{% trans "Log in using Google" %}{% if request.session.admin_oauth_prompt %} {% translate '(select account)' %}{% endif %}</a>
 </div>
 {% endblock content %}

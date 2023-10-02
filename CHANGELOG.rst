@@ -9,6 +9,8 @@ Next version
   field.
 - Stopped crashing when encountering an unknown role -- doing nothing in
   ``has_perm`` is an acceptable fallback.
+- Force account selection when failing to authenticate once in the Django admin
+  using a Google account.
 
 
 0.16 (2023-09-17)
