@@ -182,9 +182,10 @@ class Test(TestCase):
     )
     def test_admin_oauth_user_create_method_not_imported(self):
         client = Client()
-        with google_oauth_data(
-            {"email": "user@example.com", "email_verified": True}
-        ), self.assertRaises(ImportError):
+        with (
+            google_oauth_data({"email": "user@example.com", "email_verified": True}),
+            self.assertRaises(ImportError),
+        ):
             client.get("/admin/__oauth__/?code=bla")
 
     def test_authlib(self):

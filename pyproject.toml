@@ -47,7 +47,7 @@ include = ["authlib/"]
 path = "authlib/__init__.py"
 
 [tool.ruff]
-extend-select = [
+lint.extend-select = [
   # pyflakes, pycodestyle
   "F", "E", "W",
   # mmcabe
@@ -83,7 +83,7 @@ extend-select = [
   # unused noqa
   "RUF100",
 ]
-extend-ignore = [
+lint.extend-ignore = [
   # Allow zip() without strict=
   "B905",
   # No line length errors
@@ -93,14 +93,14 @@ fix = true
 show-fixes = true
 target-version = "py39"
 
-[tool.ruff.isort]
+[tool.ruff.lint.isort]
 combine-as-imports = true
 lines-after-imports = 2
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 15
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "*/migrat*/*" = [
   # Allow using PascalCase model names in migrations
   "N806",

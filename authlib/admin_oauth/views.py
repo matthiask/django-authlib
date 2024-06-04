@@ -56,6 +56,7 @@ def admin_oauth(request):
                     user = auth.authenticate(email=user_mail)
                 if user and user.is_staff:
                     auth.login(request, user)
+                    messages.success(request, _("Welcome, {}!").format(user))
                     response = redirect(retrieve_next(request) or "admin:index")
                     response.set_cookie(
                         ADMIN_OAUTH_LOGIN_HINT, email, expires=30 * 86400
