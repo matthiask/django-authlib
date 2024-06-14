@@ -2,6 +2,7 @@ import re
 
 from django.conf import settings
 from django.contrib import auth, messages
+from django.core.exceptions import MultipleObjectsReturned
 from django.shortcuts import redirect
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext as _
@@ -49,7 +50,16 @@ def admin_oauth(request):
             if match:
                 if callable(user_mail):
                     user_mail = user_mail(match)  # noqa: PLW2901
-                user = auth.authenticate(email=user_mail)
+                try:
+                    user = auth.authenticate(email=user_mail)
+                except MultipleObjectsReturned:
+                    messages.warning(
+                        request,
+                        _(
+                            "Skipping {} because multiple users exist with this address."
+                        ).format(user_mail),
+                    )
+                    continue
                 if not user and ADMIN_OAUTH_CREATE_USER_CALLBACK:
                     fn = import_string(ADMIN_OAUTH_CREATE_USER_CALLBACK)
                     fn(request, user_mail)
