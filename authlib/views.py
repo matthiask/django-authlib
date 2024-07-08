@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.exceptions import ValidationError
 from django.shortcuts import redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.text import capfirst
 from django.utils.translation import gettext as _, gettext_lazy
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
@@ -124,7 +125,7 @@ def oauth2(
 
 
 class EmailRegistrationForm(forms.Form):
-    email = forms.EmailField(label=gettext_lazy("email"))
+    email = forms.EmailField(label=capfirst(gettext_lazy("email")))
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
