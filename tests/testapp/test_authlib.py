@@ -1,17 +1,27 @@
 import base64
 import json
 from contextlib import contextmanager
+from unittest import skipUnless
 from unittest.mock import patch
 from urllib.parse import parse_qsl, urlparse
 
 import requests_mock
 from django.test import Client, TestCase
-from django.test.utils import isolate_apps
+from django.test.utils import isolate_apps, modify_settings
 from django.utils.translation import deactivate_all
 
 from authlib.base_user import BaseUser
 from authlib.facebook import FacebookOAuth2Client
 from authlib.little_auth.models import User
+
+
+try:
+    from django.contrib.auth.middleware import LoginRequiredMiddleware  # noqa: F401
+
+    has_login_required_middleware = True
+except ImportError:
+    # Django < 5.1
+    has_login_required_middleware = False
 
 
 @contextmanager
@@ -274,3 +284,17 @@ class OAuth2Test(TestCase):
         self.assertEqual(
             messages, ["No active user with email address test4@example.com found."]
         )
+
+    @skipUnless(
+        has_login_required_middleware, "LoginRequiredMiddleware needs Django 5.1+"
+    )
+    @modify_settings(
+        MIDDLEWARE={"append": "django.contrib.auth.middleware.LoginRequiredMiddleware"}
+    )
+    def test_login_not_required(self):
+        client = Client()
+        response = client.get("/login/")
+        self.assertEqual(response.status_code, 200)
+
+        response = client.get("/email/")
+        self.assertEqual(response.status_code, 200)

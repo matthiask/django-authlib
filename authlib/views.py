@@ -12,6 +12,7 @@ from django.utils.translation import gettext as _, gettext_lazy
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 
+from authlib._compat import login_not_required
 from authlib.email import decode, send_registration_mail
 
 
@@ -69,6 +70,7 @@ def email_login(request, *, email, **kwargs):
     return None, None
 
 
+@login_not_required
 @never_cache
 @sensitive_post_parameters()
 @set_next_cookie
@@ -88,6 +90,7 @@ def login(
     return render(request, template_name, {"form": form})
 
 
+@login_not_required
 @never_cache
 def oauth2(
     request,
@@ -155,6 +158,7 @@ class EmailRegistrationForm(forms.Form):
         )
 
 
+@login_not_required
 @never_cache
 def email_registration(
     request,
@@ -191,6 +195,7 @@ def email_registration(
         return redirect("login")
 
 
+@login_not_required
 @never_cache
 def logout(request, *, post_logout_response=post_logout_response):
     auth.logout(request)

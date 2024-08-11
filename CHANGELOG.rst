@@ -11,6 +11,8 @@ Next version
   ``has_perm`` is an acceptable fallback.
 - Force account selection when failing to authenticate once in the Django admin
   using a Google account.
+- Added support for Django 5.1.
+- Exempted our login views from the ``LoginRequiredMiddleware``.
 
 
 0.16 (2023-09-17)
