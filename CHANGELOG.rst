@@ -13,6 +13,7 @@ Next version
   using a Google account.
 - Added support for Django 5.1.
 - Exempted our login views from the ``LoginRequiredMiddleware``.
+- Dropped Django 4.1 from the CI. 3.2 is still there.
 
 
 0.16 (2023-09-17)
