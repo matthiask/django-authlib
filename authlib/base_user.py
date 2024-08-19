@@ -28,7 +28,11 @@ class BaseUser(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
 
     email = models.EmailField(_("email"), max_length=254, unique=True)
     is_active = models.BooleanField(_("is active"), default=True)
-    is_staff = models.BooleanField(_("is staff"), default=False)
+    is_staff = models.BooleanField(
+        _("is staff"),
+        default=False,
+        help_text=_("Designates whether the user can log into this admin site."),
+    )
     date_joined = models.DateTimeField(_("date joined"), default=timezone.now)
 
     objects = BaseUserManager()

@@ -14,6 +14,9 @@ Next version
 - Added support for Django 5.1.
 - Exempted our login views from the ``LoginRequiredMiddleware``.
 - Dropped Django 4.1 from the CI. 3.2 is still there.
+- Changed the default ``authlib.little_auth`` admin to hide the user
+  permissions field; permissions should preferrably be added via authlib roles,
+  or less preferrably via group permissions.
 
 
 0.16 (2023-09-17)
