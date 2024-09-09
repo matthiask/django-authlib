@@ -46,12 +46,21 @@ class PermissionsBackend(ModelBackend):
     def get_group_permissions(self, user, obj=None):
         return set()
 
-    # def get_all_permissions(self, user, obj=None):
+    def get_all_permissions(self, user, obj=None):
+        return self.get_user_permissions(user, obj=obj)
 
     def has_perm(self, user, perm, obj=None):
         return user._role_has_perm(perm=perm, obj=obj)
 
-    # def has_module_perms(self, user, app_label):
+    def has_module_perms(self, user_obj, app_label):
+        """
+        Return True if user_obj has any permissions in the given app_label.
+        """
+        return user_obj.is_active and any(
+            perm[: perm.index(".")] == app_label
+            for perm in self.get_all_permissions(user_obj)
+        )
+
     # def with_perm(self, perm, is_active=True, include_superusers=True, obj=None):
 
     # The user model and its manager will delegate permission lookup functions (get_user_permissions(), get_group_permissions(), get_all_permissions(), has_perm(), has_module_perms(), and with_perm()) to any authentication backend that implements these functions.

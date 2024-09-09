@@ -5,6 +5,8 @@ Change log
 Next version
 ============
 
+- Added two missing methods to the ``PermissionsBackend`` so that the admin app
+  list works correctly.
 
 0.17 (2024-08-19)
 =================
