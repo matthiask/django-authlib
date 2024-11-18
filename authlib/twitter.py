@@ -16,7 +16,7 @@ class TwitterOAuthClient:
     def get_authentication_url(self):
         oauth = OAuth1Session(self.client_id, client_secret=self.client_secret)
         token = oauth.fetch_request_token(self.request_token_url)
-        cache.set("oa-token-%s" % token["oauth_token"], token, timeout=3600)
+        cache.set("oa-token-{}".format(token["oauth_token"]), token, timeout=3600)
         self._request.session["oa_token"] = token["oauth_token"]
 
         authorization_url = oauth.authorization_url(self.authorization_base_url)
@@ -34,7 +34,7 @@ class TwitterOAuthClient:
         if not oa_token:
             return {}
 
-        resource_owner = cache.get("oa-token-%s" % oa_token)
+        resource_owner = cache.get(f"oa-token-{oa_token}")
         if not resource_owner:
             return {}
 

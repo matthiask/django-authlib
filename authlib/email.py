@@ -41,7 +41,7 @@ def render_to_mail(template, context, **kwargs):
     lines = iter(
         line.rstrip()
         for line in render_to_string(
-            ["%s.txt" % t for t in template], context
+            [f"{t}.txt" for t in template], context
         ).splitlines()
     )
 
@@ -60,7 +60,7 @@ def render_to_mail(template, context, **kwargs):
 
     with contextlib.suppress(TemplateDoesNotExist):
         message.attach_alternative(
-            render_to_string(["%s.html" % t for t in template], context), "text/html"
+            render_to_string([f"{t}.html" for t in template], context), "text/html"
         )
 
     return message
