@@ -23,8 +23,12 @@ def set_next_cookie(view):
     @wraps(view)
     def fn(request, *args, **kwargs):
         response = view(request, *args, **kwargs)
-        if request.GET.get("next"):
-            response.set_cookie(REDIRECT_COOKIE_NAME, request.GET["next"], max_age=600)
+        if (next := request.GET.get("next")) and url_has_allowed_host_and_scheme(
+            url=next,
+            allowed_hosts={request.get_host()},
+            require_https=request.is_secure(),
+        ):
+            response.set_cookie(REDIRECT_COOKIE_NAME, next, max_age=600)
         return response
 
     return fn

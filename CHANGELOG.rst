@@ -7,6 +7,9 @@ Next version
 
 - Added two missing methods to the ``PermissionsBackend`` so that the admin app
   list works correctly.
+- Added verification of the ``next`` cookie value also when setting the cookie,
+  not just when reading it.
+
 
 0.17 (2024-08-19)
 =================

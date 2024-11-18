@@ -223,6 +223,13 @@ class Test(TestCase):
             {"admin@example.com", "test@example.com"},
         )
 
+    def test_invalid_next_cookie(self):
+        client = Client()
+        response = client.get("/login/?next=http://example.com")
+        FacebookOAuth2Client.get_user_data = lambda self: {"email": "test@example.com"}
+        response = client.get("/oauth/facebook/?code=bla")
+        self.assertRedirects(response, "/?login=1", fetch_redirect_response=False)
+
     def test_str_and_email_obfuscate(self):
         user = User(email="just-testing@example.com")
         self.assertEqual(user.get_full_name(), "jus***@***.com")
