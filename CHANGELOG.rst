@@ -9,7 +9,7 @@ Next version
   list works correctly.
 - Added verification of the ``next`` cookie value also when setting the cookie,
   not just when reading it.
-- Added Python 3.13.
+- Added Python 3.13, Django 5.2a1.
 
 
 0.17 (2024-08-19)
