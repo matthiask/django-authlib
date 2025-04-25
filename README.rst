@@ -30,7 +30,7 @@ Usage
 =====
 
 - Install ``django-authlib`` using pip into your virtualenv.
-- Add ``authlib.backends.EmailBackend`` to ``AUTHENTICATION_BAcKENDS``.
+- Add ``authlib.backends.EmailBackend`` to ``AUTHENTICATION_BACKENDS``.
 - Adding ``authlib`` to ``INSTALLED_APPS`` is optional and only useful
   if you want to use the bundled translation files. There are no
   required database tables or anything of the sort.
